@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="line" maxOccurs="unbounded"/>
+                <xs:element ref="feature" maxOccurs="1"/>
+                <xs:element ref="scenarios" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="line">
+        <xs:complexType mixed="true">
+            <xs:attribute name="isCommented" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="feature">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="title"/>
+                <xs:element ref="intro"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="title" type="xs:string"/>
+
+    <xs:element name="intro">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="line" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="scenarios">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice maxOccurs="unbounded">
+                    <!-- add the constraint -->
+                    <xs:element ref="background"/>
+                    <xs:element ref="line"/>
+                    <xs:element name="scenario" type="scenario"/>
+                    <xs:element ref="scenario-outline"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="scenario">
+        <xs:sequence>
+            <xs:element ref="title" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="steps" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="steps">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="line"/>
+                <xs:element name="given" type="step"/>
+                <xs:element name="when" type="step"/>
+                <xs:element name="then" type="step"/>
+                <xs:element name="and" type="step"/>
+                <xs:element name="but" type="step"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="step">
+        <xs:simpleContent>
+            <xs:extension base="xs:string"/>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:element name="background">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="scenario"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="scenario-outline">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="scenario">
+                    <xs:sequence>
+                        <xs:element ref="examples" minOccurs="1" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="examples">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="table" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="table">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="header" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="row" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="header">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cell" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="row">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cell" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="isCommented" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>

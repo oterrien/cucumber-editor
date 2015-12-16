@@ -1,0 +1,129 @@
+﻿<root>
+    <line isCommented="true">A comment</line>
+    <line isCommented="true">Feature: A feature commented</line>
+    <line isCommented="true">In order to... commented</line>
+    <line isCommented="true">As a ... commented twice</line>
+    <line isCommented="true">As an ... commented</line>
+    <line isCommented="true">I want to ... commented</line>
+    <line isCommented="true">Another comment</line>
+    <feature>
+        <title>Some terse yet descriptive text of what is desired</title>
+        <intro>
+            <line>In order to realize a named business value</line>
+            <line isCommented="true">As a ... commented</line>
+            <line>As an explicit system actor</line>
+            <line>I want to gain some beneficial outcome which furthers the goal</line>
+        </intro>
+    </feature>
+    <scenarios>
+        <line isCommented="true">Common steps comment</line>
+        <background>
+            <title>Common steps</title>
+            <steps>
+                <given>a test table
+                    <table>
+                        <header>
+                            <cell>product</cell>
+                            <cell>currency</cell>
+                            <cell>price</cell>
+                        </header>
+                        <row isCommented="true">
+                            <cell>coffee</cell>
+                            <cell>EUR</cell>
+                            <cell>1</cell>
+                        </row>
+                        <row>
+                            <cell>donut</cell>
+                            <cell>SEK</cell>
+                            <cell>18</cell>
+                        </row>
+                    </table>
+                </given>
+            </steps>
+        </background>
+        <scenario>
+            <title>Wilson posts to his own blog</title>
+            <steps>
+                <given>a global administrator named "Greg"</given>
+                <line isCommented="true">and a blog named "Greg's anti-tax rants"</line>
+                <and>a customer named "Wilson"</and>
+                <and>a blog named "Expensive Therapy" owned by "Wilson"</and>
+                <when>I open the blog</when>
+                <then>the blog is called</then>
+            </steps>
+        </scenario>
+        <scenario-outline>
+            <title>Wilson posts to his own blog</title>
+            <steps>
+                <given>a global &lt;style&gt; named &lt;name&gt;
+                </given>
+                <line isCommented="true">Given a global &lt;style&gt; named &lt;name&gt;</line>
+                <line isCommented="true">And a blog named "Greg's anti-tax rants"</line>
+                <and>a customer named "Wilson"</and>
+                <and>a blog named &lt;blog&gt; owned by "Wilson"</and>
+            </steps>
+            <examples>
+                <table>
+                    <header>
+                        <cell>style</cell>
+                        <cell>name</cell>
+                        <cell>blog</cell>
+                    </header>
+                    <row>
+                        <cell>Standard</cell>
+                        <cell>Wilson</cell>
+                        <cell>Therapy</cell>
+                    </row>
+                    <row>
+                        <cell>Enhanced</cell>
+                        <cell>Greg</cell>
+                        <cell>Football</cell>
+                    </row>
+                </table>
+            </examples>
+        </scenario-outline>
+        <scenario>
+            <title>Wilson posts to his own blog</title>
+            <steps>
+                <given>a test table
+                    <table>
+                        <header>
+                            <cell>product</cell>
+                            <cell>currency</cell>
+                            <cell>price</cell>
+                        </header>
+                        <row isCommented="true">
+                            <cell>coffee</cell>
+                            <cell>EUR</cell>
+                            <cell>1</cell>
+                        </row>
+                        <row>
+                            <cell>donut</cell>
+                            <cell>SEK</cell>
+                            <cell>18</cell>
+                        </row>
+                    </table>
+                </given>
+                <and>a global administrator named "Greg"</and>
+                <line isCommented="true">And a blog named "Greg's anti-tax rants"</line>
+                <and>a customer named "Wilson"</and>
+                <and>a blog named "Expensive Therapy" owned by "Wilson"</and>
+                <when>I open the blog</when>
+                <then>the blog is called</then>
+            </steps>
+        </scenario>
+        <line isCommented="true">Scenario: Wilson posts to his own blog</line>
+        <line isCommented="true">Given a global administrator named "Greg"</line>
+        <line isCommented="true">And a blog named "Greg's anti-tax rants"</line>
+        <line isCommented="true">When I open the blog</line>
+        <line isCommented="true">Then the blog is called</line>
+        <line isCommented="true"></line>
+        <scenario>
+            <title>Wilson posts to his own blog</title>
+        </scenario>
+        <line isCommented="true">Given a global administrator named "Greg"</line>
+        <line isCommented="true">And a blog named "Greg's anti-tax rants"</line>
+        <line isCommented="true">When I open the blog</line>
+        <line isCommented="true">Then the blog is called</line>
+    </scenarios>
+</root>
