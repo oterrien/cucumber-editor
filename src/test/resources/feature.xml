@@ -8,12 +8,12 @@
     <line isCommented="true">Another comment</line>
     <feature>
         <title>Some terse yet descriptive text of what is desired</title>
-        <intro>
+        <description>
             <line>In order to realize a named business value</line>
             <line isCommented="true">As a ... commented</line>
             <line>As an explicit system actor</line>
             <line>I want to gain some beneficial outcome which furthers the goal</line>
-        </intro>
+        </description>
     </feature>
     <scenarios>
         <line isCommented="true">Common steps comment</line>

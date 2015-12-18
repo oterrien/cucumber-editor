@@ -21,14 +21,14 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="title"/>
-                <xs:element ref="intro"/>
+                <xs:element ref="description"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="title" type="xs:string"/>
 
-    <xs:element name="intro">
+    <xs:element name="description">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="line" maxOccurs="unbounded"/>
