@@ -14,7 +14,7 @@ public class FeatureViewMock implements IFeatureView {
     private String title;
     private List<String> description = new ArrayList<String>(10);
 
-    private EventHandler<ActionEvent> onLoadFeature;
+    private Runnable onLoadFeature;
 
     private FeaturePresenter presenter;
 
@@ -38,12 +38,12 @@ public class FeatureViewMock implements IFeatureView {
     }
 
     @Override
-    public EventHandler<ActionEvent> getOnLoadFeature() {
+    public Runnable getOnLoadFeature() {
         return onLoadFeature;
     }
 
     @Override
-    public void setOnLoadFeature(EventHandler<ActionEvent> handler) {
+    public void setOnLoadFeature(Runnable handler) {
         this.onLoadFeature = handler;
     }
 }

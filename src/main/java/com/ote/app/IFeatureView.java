@@ -16,7 +16,7 @@ public interface IFeatureView {
 
     List<String> getDescription();
 
-    EventHandler<ActionEvent> getOnLoadFeature();
+    Runnable getOnLoadFeature();
 
-    void setOnLoadFeature(EventHandler<ActionEvent> handler);
+    void setOnLoadFeature(Runnable handler);
 }

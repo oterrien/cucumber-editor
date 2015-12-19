@@ -1,7 +1,6 @@
 package com.ote.app;
 
 import com.ote.app.model.Feature;
-import javafx.event.ActionEvent;
 
 import java.util.stream.Collectors;
 
@@ -20,12 +19,12 @@ public class FeaturePresenter {
     }
 
     private void init() {
-        this.view.setOnLoadFeature(this::loadFeature);
+        this.view.setOnLoadFeature(this::loadFeatureInView);
     }
 
-    private void loadFeature(ActionEvent event) {
+    private void loadFeatureInView() {
         this.view.setTitle(this.feature.getTitle());
-        this.view.getDescription().addAll(this.feature.getDescription().getLine().
-                stream().map(l -> l.getContent()).collect(Collectors.toList()));
+        /*this.view.getDescription().addAll(this.feature.getDescription().getLine().
+                stream().map(l -> l.getContent()).collect(Collectors.toList()));*/
     }
 }

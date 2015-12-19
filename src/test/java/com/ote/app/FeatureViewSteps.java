@@ -1,12 +1,10 @@
 package com.ote.app;
 
 import com.ote.app.model.Description;
-import com.ote.app.model.Feature;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 
 import java.util.stream.IntStream;
 
@@ -35,7 +33,7 @@ public class FeatureViewSteps {
     public void I_load_the_feature_into_the_view() throws Throwable {
 
         this.view = new FeatureViewMock(STANDARD_FEATURE);
-        this.view.getOnLoadFeature().handle(null);
+        this.view.getOnLoadFeature().run();
     }
 
     @Then("the feature's title from view should be \"(.*)\"")
