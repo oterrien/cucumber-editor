@@ -1,4 +1,4 @@
-package com.ote.app;
+package com.ote.app.view;
 
 import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;

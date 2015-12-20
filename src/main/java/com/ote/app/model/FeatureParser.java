@@ -1,4 +1,4 @@
-package com.ote.app;
+package com.ote.app.model;
 
 import com.ote.app.model.Description;
 import com.ote.app.model.Feature;

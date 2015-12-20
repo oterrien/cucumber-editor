@@ -1,0 +1,26 @@
+.root {
+    -fx-background-color: "azure";
+}
+
+.featureName {
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI";
+    -fx-fill: "forestgreen";
+    -fx-font-weight: bold;
+}
+
+.featureTitle {
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI";
+    -fx-font-style: italic;
+
+}
+
+.description {
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI";
+}
+
+.comment {
+
+}

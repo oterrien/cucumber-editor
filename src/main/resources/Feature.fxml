@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.ote.app.component.ImageButton?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ote.app.view.FeatureView">
+    <children>
+        <TextFlow fx:id="displayPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="200.0" prefWidth="200.0"
+                  styleClass="root" stylesheets="@Feature.css" VBox.vgrow="ALWAYS"/>
+        <VBox fx:id="editPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <HBox prefHeight="15.0" prefWidth="600.0">
+                    <children>
+                        <Label text="Feature: " textFill="FORESTGREEN">
+                            <font>
+                                <Font name="Segoe UI Bold" size="18.0"/>
+                            </font>
+                        </Label>
+                        <TextField fx:id="titleComponent" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="Segoe UI Italic" size="14.0"/>
+                            </font>
+                        </TextField>
+                    </children>
+                </HBox>
+                <TextArea fx:id="descriptionComponent" prefHeight="200.0" prefWidth="200.0"
+                          AnchorPane.bottomAnchor="0.0"
+                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <font>
+                        <Font name="Segoe UI" size="14.0"/>
+                    </font>
+                </TextArea>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                    <buttons>
+                        <ImageButton onAction="#validate" mnemonicParsing="false"
+                                     imageURL="icons/Apply.png" fitHeight="40" fitWidth="40"/>
+                        <ImageButton onAction="#cancel" layoutX="535.0" layoutY="10.0"
+                                     mnemonicParsing="false" imageURL="icons/No.png" fitHeight="40" fitWidth="40"/>
+                    </buttons>
+                </ButtonBar>
+            </children>
+        </VBox>
+    </children>
+</VBox>

@@ -1,7 +1,8 @@
-package com.ote.app;
+package com.ote.app.model;
 
 import com.ote.app.model.Description;
 import com.ote.app.model.Feature;
+import com.ote.app.model.FeatureParser;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
