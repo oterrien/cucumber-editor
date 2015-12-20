@@ -2,43 +2,65 @@ package com.ote.app.view;
 
 import com.ote.app.Mode;
 import com.ote.app.model.Feature;
+import com.ote.app.model.FeatureParser;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 17/12/2015.
  */
-public class FeaturePresenter {
+public final class FeaturePresenter {
 
-    private IFeatureView view;
-    private Feature feature;
+    private static final FeaturePresenter INSTANCE = new FeaturePresenter();
 
-    public FeaturePresenter(IFeatureView view) {
-        this.view = view;
-        init();
+    private ObjectProperty<Feature> feature = new SimpleObjectProperty<>();
+
+    private ObjectProperty<Mode> mode = new SimpleObjectProperty<>();
+
+    private FeaturePresenter() {
+
     }
 
-    private void init() {
-
-        this.view.addOnSetFeatureHandler(this::loadFeatureInView);
+    public ObjectProperty<Mode> modeProperty() {
+        return this.mode;
     }
 
-    public Feature getFeature() {
-        return feature;
+    public ObjectProperty<Feature> featureProperty() {
+        return this.feature;
     }
 
-    public void setFeature(Feature feature) {
-        this.feature = feature;
+    public static FeaturePresenter getInstance() {
+        return INSTANCE;
     }
 
-    private void loadFeatureInView(Feature feature) {
+    public void register(IFeatureView view) {
 
-        this.feature = feature;
+        // Plug view's title and description to feature updates
+        feature.addListener((observable, oldValue, newValue) -> this.updateView(view, newValue));
 
-        this.view.setTitle(this.feature.getTitle());
-        this.view.setDescription(this.feature.getDescription().getLine().
-                stream().map(l -> l.getContent()).collect(Collectors.joining("\r\n")));
+        // When showCommand is executed, reset title & description with the content of feature
+        view.getShowCommand().addHandler(none -> this.updateView(view, this.feature.get()));
 
-        this.view.setMode(Mode.DISPLAY);
+        if (view instanceof IFeatureEditView) {
+            ((IFeatureEditView) view).getValidateCommand().addHandler(none -> {
+                StringBuilder sb = new StringBuilder("Feature: ").
+                        append(view.getTitle()).
+                        append("\r\n").
+                        append(view.getDescription().stream().collect(Collectors.joining("\r\n")));
+
+                this.feature.set(FeatureParser.parseFeature(sb.toString()));
+            });
+        }
+
+        Platform.runLater(() -> this.mode.set(Mode.DISPLAY));
+    }
+
+    private void updateView(IFeatureView view, Feature feature) {
+        view.setTitle(feature.getTitle());
+        view.setDescription(feature.getDescription().getLine().
+                stream().map(l -> l.getContent()).collect(Collectors.toList()));
     }
 }

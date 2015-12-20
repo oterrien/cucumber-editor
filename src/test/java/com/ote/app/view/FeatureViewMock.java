@@ -1,6 +1,7 @@
 package com.ote.app.view;
 
 import com.ote.app.Mode;
+import com.ote.app.command.MultiConsumer;
 import com.ote.app.model.Feature;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * Created by Olivier on 17/12/2015.
  */
-public class FeatureViewMock implements IFeatureView {
+public class FeatureViewMock {} /*implements IFeatureView {
 
     private String title, description;
 
@@ -54,28 +55,8 @@ public class FeatureViewMock implements IFeatureView {
     }
 
     @Override
-    public void addOnSetFeatureHandler(Consumer<Feature> handler) {
-        this.onSetFeatureHandler.add(handler);
-    }
-
-    @Override
-    public void addOnValidateEditionHandler(Runnable handler) {
-        this.onValidateEditionHandler.add(handler);
-    }
-
-    @Override
-    public void addOnCancelEditionHandler(Runnable handler) {
-        this.onCancelEditionHandler.add(handler);
-    }
-
-    @Override
-    public Mode getMode() {
-        return this.mode;
-    }
-
-    @Override
-    public void setMode(Mode mode) {
-        this.mode = mode;
+    public MultiConsumer.ParametrizedAction<Feature> getSetFeatureMultiConsumer() {
+        return null;
     }
 
     @Override
@@ -84,7 +65,18 @@ public class FeatureViewMock implements IFeatureView {
     }
 
     @Override
+    public MultiConsumer.Action getValidateEditionMultiConsumer() {
+        return null;
+    }
+
+    @Override
     public void cancel() {
 
     }
+
+    @Override
+    public MultiConsumer.Action getCancelEditionMultiConsumer() {
+        return null;
+    }
 }
+*/

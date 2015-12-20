@@ -5,6 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Created by Olivier on 19/12/2015.
+ */
 public class ImageButton extends Button {
 
     private final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 0, 0, 0, 0;";
@@ -15,7 +18,18 @@ public class ImageButton extends Button {
     private double fitHeight = 100, fitWidth = 100;
 
     public ImageButton() {
-        initialize();
+
+        setStyle(STYLE_NORMAL);
+
+        setOnMousePressed(event -> setStyle(STYLE_PRESSED));
+        setOnMouseReleased(event -> setStyle(STYLE_NORMAL));
+
+        Platform.runLater(() -> {
+            ImageView imageView = new ImageView(new Image(ClassLoader.getSystemResourceAsStream(imageURL)));
+            imageView.setFitHeight(fitHeight);
+            imageView.setFitWidth(fitWidth);
+            setGraphic(imageView);
+        });
     }
 
     public String getImageURL() {
@@ -40,20 +54,5 @@ public class ImageButton extends Button {
 
     public void setFitWidth(double fitWidth) {
         this.fitWidth = fitWidth;
-    }
-
-    public void initialize() {
-
-        setStyle(STYLE_NORMAL);
-
-        setOnMousePressed(event -> setStyle(STYLE_PRESSED));
-        setOnMouseReleased(event -> setStyle(STYLE_NORMAL));
-
-        Platform.runLater(() -> {
-            ImageView imageView = new ImageView(new Image(ClassLoader.getSystemResourceAsStream(imageURL)));
-            imageView.setFitHeight(fitHeight);
-            imageView.setFitWidth(fitWidth);
-            setGraphic(imageView);
-        });
     }
 }

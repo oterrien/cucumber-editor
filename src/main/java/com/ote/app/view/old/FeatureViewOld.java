@@ -1,8 +1,10 @@
-package com.ote.app.view;
+package com.ote.app.view.old;
 
 import com.ote.app.Mode;
 import com.ote.app.model.Feature;
 import com.ote.app.model.FeatureParser;
+import com.ote.app.view.FeaturePresenter;
+import com.ote.app.view.IFeatureView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * Created by Olivier on 19/12/2015.
  */
-public class FeatureView implements IFeatureView {
+public class FeatureViewOld implements IFeatureViewOld {
 
     private static final String STANDARD_FEATURE =
             "Feature: Feature View Management\r\n" +
@@ -55,12 +57,12 @@ public class FeatureView implements IFeatureView {
 
     private ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.DISPLAY);
 
-    private FeaturePresenter presenter;
+    private FeaturePresenterOld presenter;
 
     @FXML
     public void initialize() {
 
-        this.presenter = new FeaturePresenter(this);
+        this.presenter = new FeaturePresenterOld(this);
 
         this.displayPane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {

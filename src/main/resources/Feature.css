@@ -2,14 +2,14 @@
     -fx-background-color: "azure";
 }
 
-.featureName {
+.name {
     -fx-font-size: 20px;
     -fx-font-family: "Segoe UI";
     -fx-fill: "forestgreen";
     -fx-font-weight: bold;
 }
 
-.featureTitle {
+.title {
     -fx-font-size: 20px;
     -fx-font-family: "Segoe UI";
     -fx-font-style: italic;

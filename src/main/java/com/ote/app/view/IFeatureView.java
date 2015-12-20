@@ -1,46 +1,40 @@
 package com.ote.app.view;
 
 import com.ote.app.Mode;
-import com.ote.app.model.Feature;
+import com.ote.app.command.MultiConsumer;
 
-import java.util.function.Consumer;
+import java.util.Collection;
 
 /**
  * Created by Olivier on 17/12/2015.
  */
 public interface IFeatureView {
 
+    /**
+     * La vue a pour objectif la mise à jour du modele au moment de la validation
+     * <p>
+     * Et ne rien faire au moment du cancel
+     * <p>
+     * Le fait qu'on switch de mode ne change rien
+     */
+
+    Mode getMode();
+
     String getTitle();
 
     void setTitle(String title);
 
-    String getDescription();
+    Collection<String> getDescription();
 
-    void setDescription(String description);
+    void setDescription(Collection<String> description);
 
-    Mode getMode();
+    void show();
 
-    void setMode(Mode mode);
+    MultiConsumer<Void> getShowCommand();
 
-    void setFeature(Feature feature);
+    void hide();
 
-    void addOnSetFeatureHandler(Consumer<Feature> handler);
+    MultiConsumer<Void> getHideCommand();
 
-    void validate();
-
-    void addOnValidateEditionHandler(Runnable handler);
-
-    void cancel();
-
-    void addOnCancelEditionHandler(Runnable handler);
-
-
-    /**
-     * La vue a pour objectif la mise à jour du modele au moment de la validation
-     *
-     * Et ne rien faire au moment du cancel
-     *
-     * Le fait qu'on switch de mode ne change rien
-     */
 
 }

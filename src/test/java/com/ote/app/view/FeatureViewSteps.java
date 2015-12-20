@@ -33,8 +33,8 @@ public class FeatureViewSteps {
     @When("I load the feature into the view")
     public void I_load_the_feature_into_the_view() throws Throwable {
 
-        this.view = new FeatureViewMock();
-        this.view.setFeature(FeatureParser.parseFeature(STANDARD_FEATURE));
+        /*this.view = new FeatureViewMock();
+        this.view.setFeature(FeatureParser.parseFeature(STANDARD_FEATURE));*/
     }
 
     @Then("the feature's title from view should be \"(.*)\"")
@@ -63,8 +63,8 @@ public class FeatureViewSteps {
     @When("I update the feature's description from view to:")
     public void I_update_the_feature_s_description_from_view_to(String newDescription) throws Throwable {
 
-        newDescription = format(newDescription);
-        this.view.setDescription(newDescription);
+       /* newDescription = format(newDescription);
+        this.view.setDescription(newDescription);*/
     }
 
     private String format(String newDescription) {
