@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  */
 public class MultiConsumer<T> implements Consumer<T> {
 
-    private Collection<Consumer<T>> handlers;
+    private Collection<Consumer<T>> handlers = new ArrayList<>(10);
 
     @Override
     public void accept(T param) {
@@ -19,9 +19,6 @@ public class MultiConsumer<T> implements Consumer<T> {
     }
 
     public MultiConsumer addHandler(Consumer<T> handler) {
-        if (handlers == null) {
-            handlers = new ArrayList<>(10);
-        }
         handlers.add(handler);
         return this;
     }

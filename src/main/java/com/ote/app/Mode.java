@@ -5,5 +5,5 @@ package com.ote.app;
  */
 public enum Mode {
 
-    EDIT, DISPLAY
+    EDIT, DISPLAY, INIT
 }

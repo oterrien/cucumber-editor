@@ -1,9 +1,5 @@
 package com.ote.app.model;
 
-import com.ote.app.model.Description;
-import com.ote.app.model.Feature;
-import com.ote.app.model.Line;
-
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -42,6 +38,9 @@ public class FeatureParser {
                 forEach(i -> {
                     Line line = new Line();
                     line.setContent(text[i].replaceAll("(\t)", "").trim());
+                    if (line.getContent().startsWith("#")){
+                        line.setIsCommented(true);
+                    }
                     description.getLine().add(line);
                 });
 

@@ -3,9 +3,9 @@ package com.ote.app.view;
 import com.ote.app.command.MultiConsumer;
 
 /**
- * Created by Olivier on 20/12/2015.
+ * Created by Olivier on 21/12/2015.
  */
-public interface IFeatureEditView extends IFeatureView {
+public interface IEditView extends IView {
 
     void validate();
 

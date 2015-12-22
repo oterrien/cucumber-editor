@@ -1,11 +1,11 @@
 .root {
-    -fx-background-color: "azure";
+    -fx-background-color: "White";
 }
 
 .name {
     -fx-font-size: 20px;
     -fx-font-family: "Segoe UI";
-    -fx-fill: "forestgreen";
+    -fx-fill: "ForestGreen";
     -fx-font-weight: bold;
 }
 
@@ -22,5 +22,8 @@
 }
 
 .comment {
-
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI";
+    -fx-font-style: italic;
+    -fx-fill: "green";
 }

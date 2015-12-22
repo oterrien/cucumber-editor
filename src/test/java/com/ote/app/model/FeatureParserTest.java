@@ -1,8 +1,5 @@
 package com.ote.app.model;
 
-import com.ote.app.model.Description;
-import com.ote.app.model.Feature;
-import com.ote.app.model.FeatureParser;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -11,9 +8,10 @@ import org.junit.Test;
  */
 public class FeatureParserTest {
 
-    private static final String DESCRIPTION = "    In order to test the feature view\r\n" +
-            "    As a user\r\n" +
-            "    I want to create new feature and update data\r\n";
+    private static final String DESCRIPTION = "" +
+            "\tIn order to test the feature view\r\n" +
+            "\tAs a user\r\n" +
+            "\tI want to create new feature and update data\r\n";
 
     private static final String FEATURE = "Feature: Feature View Management\r\n" + DESCRIPTION;
 

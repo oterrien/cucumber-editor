@@ -1,20 +1,14 @@
-import com.ote.app.Mode;
-import com.ote.app.model.FeatureParser;
+package com.ote.app.view.scenario;
+
 import com.ote.app.view.ViewFactory;
-import com.ote.app.view.feature.FeaturePresenter;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
  * Created by Olivier on 17/12/2015.
  */
-public class LaunchApp extends Application {
+public class LaunchAppScenario extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -24,7 +18,7 @@ public class LaunchApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        stage.setScene(new Scene(new Pane(new Label("Nothing Yet")) ));
+        stage.setScene(new Scene(ViewFactory.getInstance().createScenario()));
         stage.setTitle("Cucumber Editor");
         stage.setWidth(800);
         stage.setHeight(240);

@@ -5,4 +5,4 @@
 <TextFlow fx:id="root" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="200.0" prefWidth="200.0"
           styleClass="root" stylesheets="@Feature.css" VBox.vgrow="ALWAYS" onMouseClicked="#edit"
           xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.ote.app.view.FeatureDisplayView"/>
+          fx:controller="com.ote.app.view.feature.FeatureDisplayView"/>
