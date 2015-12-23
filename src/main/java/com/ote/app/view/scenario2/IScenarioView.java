@@ -3,8 +3,6 @@ package com.ote.app.view.scenario2;
 import com.ote.app.model.Steps;
 import com.ote.app.view.IView;
 
-import java.util.Collection;
-
 /**
  * Created by Olivier on 21/12/2015.
  */
