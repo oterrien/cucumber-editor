@@ -1,8 +1,6 @@
 package com.ote.app.view.feature;
 
-import com.ote.app.model.Description;
-import com.ote.app.model.Feature;
-import com.ote.app.model.FeatureParser;
+import com.ote.app.model.*;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -27,7 +25,7 @@ public class FeatureViewSteps {
     @Given("a standard feature")
     public void a_standard_feature() throws Throwable {
 
-        this.feature = FeatureParser.parseFeature(STANDARD_FEATURE);
+        this.feature = FeatureConverter.getInstance().getParser().parse(STANDARD_FEATURE);
     }
 
     @When("I load the feature")
@@ -45,7 +43,7 @@ public class FeatureViewSteps {
     @Then("the feature's description should be:")
     public void the_feature_description_equals(String newDescription) throws Throwable {
 
-        Description description = FeatureParser.parseDescription(newDescription);
+        Description description = FeatureDescriptionConverter.getInstance().getParser().parse(newDescription);
 
         Assertions.assertThat(description.getLine().
                 stream().
@@ -76,7 +74,7 @@ public class FeatureViewSteps {
     @Then("the feature should be:")
     public void the_feature_is(String featureAsText) throws Throwable {
 
-        Feature feature = FeatureParser.parseFeature(featureAsText);
+        Feature feature = FeatureConverter.getInstance().getParser().parse(featureAsText);
 
         Assertions.assertThat(feature.getTitle()).isEqualTo(this.feature.getTitle());
         Assertions.assertThat(feature.getDescription().getLine().stream().map(line -> line.getContent()).collect(Collectors.joining("\r\n"))).

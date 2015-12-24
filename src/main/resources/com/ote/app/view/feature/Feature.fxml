@@ -39,9 +39,9 @@
                 <ButtonBar prefHeight="20.0" prefWidth="200.0">
                     <buttons>
                         <ImageButton onAction="#onValidateClicked" mnemonicParsing="false"
-                                     imageURL="icons3/thumb_up.png" fitHeight="40" fitWidth="40"/>
+                                     imageURL="images/thumb_up.png" fitHeight="40" fitWidth="40"/>
                         <ImageButton onAction="#onCancelClicked" mnemonicParsing="false"
-                                     imageURL="icons3/thumb_down.png" fitHeight="40" fitWidth="40"/>
+                                     imageURL="images/thumb_down.png" fitHeight="40" fitWidth="40"/>
                     </buttons>
                 </ButtonBar>
             </children>

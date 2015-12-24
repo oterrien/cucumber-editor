@@ -1,18 +1,16 @@
 package com.ote.app.view.feature;
 
 import com.ote.app.model.Feature;
-import com.ote.app.model.FeatureFormatter;
-import com.ote.app.model.FeatureParser;
+import com.ote.app.model.FeatureConverter;
 import com.ote.app.view.AbstractPresenter;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.ote.app.view.IPresenter;
 
 import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 23/12/2015.
  */
-public class FeaturePresenter extends AbstractPresenter<Feature, IFeatureView> {
+public class FeaturePresenter extends AbstractPresenter<Feature, IFeatureView> implements IPresenter<Feature, IFeatureView> {
 
     public FeaturePresenter(IFeatureView view) {
         super(view);
@@ -27,7 +25,7 @@ public class FeaturePresenter extends AbstractPresenter<Feature, IFeatureView> {
 
     @Override
     protected void fillModel() {
-        String featureString = FeatureFormatter.format(this.getView().getTitle(), this.getView().getDescription());
-        this.setModel(FeatureParser.parseFeature(featureString));
+        this.setModel(FeatureConverter.getInstance().getParser().
+                parse(this.getView().getTitle(), this.getView().getDescription()));
     }
 }

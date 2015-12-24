@@ -18,7 +18,7 @@ public class FeatureParserTest {
     @Test
     public void feature_text_should_be_loaded_into_model() {
 
-        Feature feature = FeatureParser.parseFeature(FEATURE);
+        Feature feature = FeatureConverter.getInstance().getParser().parse(FEATURE);
 
         Assertions.assertThat(feature).isNotNull();
         Assertions.assertThat(feature.getTitle()).isEqualTo("Feature View Management");
@@ -30,7 +30,7 @@ public class FeatureParserTest {
     @Test
     public void description_text_should_be_loaded_into_model() {
 
-        Description description = FeatureParser.parseDescription(DESCRIPTION);
+        Description description = FeatureDescriptionConverter.getInstance().getParser().parse(DESCRIPTION);
 
         Assertions.assertThat(description.getLine().get(0).getContent()).isEqualTo("In order to test the feature view");
         Assertions.assertThat(description.getLine().get(1).getContent()).isEqualTo("As a user");

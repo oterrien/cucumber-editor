@@ -5,7 +5,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="line" maxOccurs="unbounded"/>
-                <xs:element ref="model" maxOccurs="1"/>
+                <xs:element ref="feature" maxOccurs="1"/>
                 <xs:element ref="scenarios" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
@@ -17,7 +17,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="model">
+    <xs:element name="feature">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="title"/>
@@ -61,20 +61,33 @@
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
                 <xs:element ref="line"/>
-                <xs:element name="given" type="step"/>
-                <xs:element name="when" type="step"/>
-                <xs:element name="then" type="step"/>
-                <xs:element name="and" type="step"/>
-                <xs:element name="but" type="step"/>
+                <xs:element name="definition" type="definition"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="step">
-        <xs:simpleContent>
-            <xs:extension base="xs:string"/>
-        </xs:simpleContent>
+    <xs:complexType name="definition">
+        <xs:sequence>
+            <xs:element ref="step" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="table" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
+
+    <xs:element name="step">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" type="stepType"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="stepType" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="given"/>
+            <xs:enumeration value="when"/>
+            <xs:enumeration value="then"/>
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="but"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:element name="background">
         <xs:complexType>

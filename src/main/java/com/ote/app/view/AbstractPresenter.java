@@ -1,7 +1,5 @@
 package com.ote.app.view;
 
-import com.ote.app.model.FeatureFormatter;
-import com.ote.app.model.FeatureParser;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
