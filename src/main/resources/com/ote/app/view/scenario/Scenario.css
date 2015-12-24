@@ -13,7 +13,13 @@
     -fx-font-size: 20px;
     -fx-font-family: "Segoe UI";
     -fx-font-style: italic;
+}
 
+.step {
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI";
+    -fx-fill: "Tomato";
+    -fx-font-weight: bold;
 }
 
 .description {

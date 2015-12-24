@@ -55,8 +55,8 @@ public final class FeatureConverter implements IModelConverter<Feature> {
             StringBuilder sb = new StringBuilder("Feature: ").
                     append(model.getTitle()).
                     append("\r\n").
-                    append(model.getDescription().getLine().
-                            stream().map(l -> l.getContent()).collect(Collectors.joining("\r\n")));
+                    append(FeatureDescriptionConverter.getInstance().
+                            getFormatter().format(model.getDescription()));
 
             return sb.toString();
         }

@@ -74,20 +74,20 @@ public class FeatureView extends AbstractEditableView<FeaturePresenter, Feature>
 
         this.displayPane.getChildren().clear();
 
-        Text featureName = new Text("Feature: ");
-        featureName.getStyleClass().add("name");
-        this.displayPane.getChildren().add(featureName);
+        Text name = new Text("Feature: ");
+        name.getStyleClass().add("name");
+        this.displayPane.getChildren().add(name);
 
-        Text featureTitle = new Text(this.getTitle());
-        featureTitle.getStyleClass().add("title");
-        this.displayPane.getChildren().add(featureTitle);
+        Text title = new Text(this.getTitle());
+        title.getStyleClass().add("title");
+        this.displayPane.getChildren().add(title);
 
         Description description = FeatureDescriptionConverter.getInstance().getParser().parse(this.getDescription());
-        description.getLine().stream().map(l -> l.getContent()).forEach(s -> {
+        description.getLine().stream().map(l -> l.getContent()).forEach(content -> {
             this.displayPane.getChildren().add(new Text("\r\n"));
-            Text featureDescription = new Text(s);
-            featureDescription.getStyleClass().add(s.startsWith("#") ? "comment" : "description");
-            this.displayPane.getChildren().add(featureDescription);
+            Text text = new Text(content);
+            text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
+            this.displayPane.getChildren().add(text);
         });
     }
 

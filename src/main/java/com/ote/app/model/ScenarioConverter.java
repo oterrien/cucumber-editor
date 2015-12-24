@@ -1,6 +1,7 @@
 package com.ote.app.model;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 24/12/2015.
@@ -50,7 +51,15 @@ public class ScenarioConverter implements IModelConverter<Scenario> {
 
         @Override
         public String format(Scenario model) {
-            return null;
+
+            StringBuilder sb = new StringBuilder("Feature: ").
+                    append(model.getTitle()).
+                    append("\r\n").
+                    append(ScenarioStepsConverter.getInstance().getFormatter().
+                            format(model.getSteps()));
+
+            return sb.toString();
         }
+
     }
 }

@@ -2,6 +2,7 @@ package com.ote.app.view.feature;
 
 import com.ote.app.model.Feature;
 import com.ote.app.model.FeatureConverter;
+import com.ote.app.model.FeatureDescriptionConverter;
 import com.ote.app.view.AbstractPresenter;
 import com.ote.app.view.IPresenter;
 
@@ -19,8 +20,8 @@ public class FeaturePresenter extends AbstractPresenter<Feature, IFeatureView> i
     @Override
     protected void fillView(Feature model) {
         this.getView().setTitle(model.getTitle());
-        this.getView().setDescription(model.getDescription().getLine().
-                stream().map(l -> l.getContent()).collect(Collectors.joining("\r\n")));
+        this.getView().setDescription(FeatureDescriptionConverter.getInstance().
+                getFormatter().format(model.getDescription()));
     }
 
     @Override

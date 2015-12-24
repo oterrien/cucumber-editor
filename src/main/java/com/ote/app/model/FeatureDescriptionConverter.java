@@ -1,6 +1,5 @@
 package com.ote.app.model;
 
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -59,8 +58,10 @@ public final class FeatureDescriptionConverter implements IModelConverter<Descri
         @Override
         public String format(Description model) {
 
-            return model.getLine().stream().
-                    map(l -> l.getContent()).collect(Collectors.joining("\r\n"));
+            StringBuilder sb = new StringBuilder();
+            model.getLine().stream().
+                    forEach(l -> sb.append(l.isIsCommented() ? "# " : "").append(l.getContent()).append("\r\n"));
+            return sb.toString();
         }
     }
 }

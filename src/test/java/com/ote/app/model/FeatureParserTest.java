@@ -22,9 +22,7 @@ public class FeatureParserTest {
 
         Assertions.assertThat(feature).isNotNull();
         Assertions.assertThat(feature.getTitle()).isEqualTo("Feature View Management");
-        Assertions.assertThat(feature.getDescription().getLine().get(0).getContent()).isEqualTo("In order to test the feature view");
-        Assertions.assertThat(feature.getDescription().getLine().get(1).getContent()).isEqualTo("As a user");
-        Assertions.assertThat(feature.getDescription().getLine().get(2).getContent()).isEqualTo("I want to create new feature and update data");
+        Assertions.assertThat(feature.getDescription().getLine().size() == 3);
     }
 
     @Test
@@ -32,6 +30,7 @@ public class FeatureParserTest {
 
         Description description = FeatureDescriptionConverter.getInstance().getParser().parse(DESCRIPTION);
 
+        Assertions.assertThat(description.getLine().size() == 3);
         Assertions.assertThat(description.getLine().get(0).getContent()).isEqualTo("In order to test the feature view");
         Assertions.assertThat(description.getLine().get(1).getContent()).isEqualTo("As a user");
         Assertions.assertThat(description.getLine().get(2).getContent()).isEqualTo("I want to create new feature and update data");
