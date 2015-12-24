@@ -1,19 +1,18 @@
 package com.ote.app.view.feature;
 
+import com.ote.app.model.Feature;
 import com.ote.app.view.IView;
 
-import java.util.Collection;
-
 /**
- * Created by Olivier on 17/12/2015.
+ * Created by Olivier on 23/12/2015.
  */
-public interface IFeatureView extends IView {
+public interface IFeatureView extends IView<Feature> {
 
     String getTitle();
 
     void setTitle(String title);
 
-    Collection<String> getDescription();
+    String getDescription();
 
-    void setDescription(Collection<String> description);
+    void setDescription(String description);
 }

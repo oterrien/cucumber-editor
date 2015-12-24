@@ -5,7 +5,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="line" maxOccurs="unbounded"/>
-                <xs:element ref="feature" maxOccurs="1"/>
+                <xs:element ref="model" maxOccurs="1"/>
                 <xs:element ref="scenarios" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
@@ -17,7 +17,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="feature">
+    <xs:element name="model">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="title"/>

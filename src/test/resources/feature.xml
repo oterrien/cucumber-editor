@@ -1,12 +1,12 @@
 ﻿<root>
     <line isCommented="true">A comment</line>
-    <line isCommented="true">Feature: A feature commented</line>
+    <line isCommented="true">Feature: A model commented</line>
     <line isCommented="true">In order to... commented</line>
     <line isCommented="true">As a ... commented twice</line>
     <line isCommented="true">As an ... commented</line>
     <line isCommented="true">I want to ... commented</line>
     <line isCommented="true">Another comment</line>
-    <feature>
+    <model>
         <title>Some terse yet descriptive text of what is desired</title>
         <description>
             <line>In order to realize a named business value</line>
@@ -14,7 +14,7 @@
             <line>As an explicit system actor</line>
             <line>I want to gain some beneficial outcome which furthers the goal</line>
         </description>
-    </feature>
+    </model>
     <scenarios>
         <line isCommented="true">Common steps comment</line>
         <background>

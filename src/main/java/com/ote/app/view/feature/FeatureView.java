@@ -1,15 +1,17 @@
-package com.ote.app.view.feature3;
+package com.ote.app.view.feature;
 
 import com.ote.app.Mode;
-import com.ote.app.command.MultiConsumer;
 import com.ote.app.model.Description;
 import com.ote.app.model.Feature;
 import com.ote.app.model.FeatureParser;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.ote.app.view.AbstractEditableView;
+import com.ote.app.view.AbstractView;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -19,12 +21,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.util.stream.Collectors;
-
 /**
  * Created by Olivier on 22/12/2015.
  */
-public class FeatureView implements IFeatureView {
+public class FeatureView extends AbstractEditableView<FeaturePresenter, Feature> implements IFeatureView {
 
     @FXML
     private TextFlow displayPane;
@@ -38,43 +38,28 @@ public class FeatureView implements IFeatureView {
     @FXML
     private TextArea description;
 
-    private MultiConsumer<Void> validateCommand = new MultiConsumer<>();
-
-    private MultiConsumer<Void> cancelCommand = new MultiConsumer<>();
-
-    private FeaturePresenter presenter;
-
-    private ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.INIT);
-
     @FXML
     public void initialize() {
 
-        this.presenter = new FeaturePresenter(this);
+        super.initialize();
 
-        this.mode.addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(Mode.DISPLAY)) {
-                displayFeature();
-                show(displayPane);
-                hide(editPane);
-            } else {
-                hide(displayPane);
-                show(editPane);
+        // SHIFT + ENTER -> validate description and title
+        EventHandler<KeyEvent> validateOnShiftEnter = (event) -> {
+            if (event.isShiftDown() && event.getCode() == KeyCode.ENTER) {
+                validate();
             }
-        });
+        };
 
-        this.validateCommand.addHandler(aVoid -> this.mode.set(Mode.DISPLAY));
+        this.description.setOnKeyPressed(validateOnShiftEnter);
+        this.title.setOnKeyPressed(validateOnShiftEnter);
 
-        this.cancelCommand.addHandler(aVoid1 -> {
-            this.setTitle(this.getFeature().getTitle());
-            this.setDescription(this.getFeature().getDescription().getLine().
-                    stream().map(l -> l.getContent()).collect(Collectors.joining("\r\n")));
-        });
+        this.load();
+        this.setMode(Mode.DISPLAY);
+    }
 
-        this.cancelCommand.addHandler(aVoid -> this.mode.set(Mode.DISPLAY));
-
-        this.loadFeature();
-
-        this.mode.set(Mode.DISPLAY);
+    @Override
+    protected FeaturePresenter createPresenter() {
+        return new FeaturePresenter(this);
     }
 
     @Override
@@ -98,42 +83,33 @@ public class FeatureView implements IFeatureView {
     }
 
     @FXML
-    @Override
-    public void validate() {
-        validateCommand.accept(null);
-    }
-
-    @Override
-    public MultiConsumer<Void> getValidateCommand() {
-        return this.validateCommand;
+    public void onValidateClicked() {
+        validate();
     }
 
     @FXML
-    @Override
-    public void cancel() {
-        cancelCommand.accept(null);
-    }
-
-    @Override
-    public MultiConsumer<Void> getCancelCommand() {
-        return this.cancelCommand;
-    }
-
-    @Override
-    public Feature getFeature() {
-        return this.presenter.getFeature();
-    }
-
-    @Override
-    public void setFeature(Feature feature) {
-        this.presenter.setFeature(feature);
+    public void onCancelClicked() {
+        cancel();
     }
 
     @FXML
-    public void edit(MouseEvent event) {
+    public void onDisplayPaneClicked(MouseEvent event) {
         if (event.getButton().equals(MouseButton.PRIMARY)) {
-            this.mode.set(Mode.EDIT);
+            this.setMode(Mode.EDIT);
         }
+    }
+
+    @Override
+    protected void display() {
+        fillDisplayPane();
+        hide(this.editPane);
+        show(this.displayPane);
+    }
+
+    @Override
+    protected void edit() {
+        hide(this.displayPane);
+        show(this.editPane);
     }
 
     private void hide(Pane pane) {
@@ -154,7 +130,7 @@ public class FeatureView implements IFeatureView {
         pane.setVisible(true);
     }
 
-    private void displayFeature() {
+    private void fillDisplayPane() {
 
         this.displayPane.getChildren().clear();
 
@@ -181,9 +157,9 @@ public class FeatureView implements IFeatureView {
                     "\tAs a user\r\n" +
                     "\tI want to create new feature and update data\r\n";
 
-    public void loadFeature() {
+    public void load() {
 
-        this.setFeature(FeatureParser.parseFeature(STANDARD_FEATURE));
+        this.setModel(FeatureParser.parseFeature(STANDARD_FEATURE));
 
     }
 }

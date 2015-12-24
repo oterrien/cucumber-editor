@@ -1,14 +1,7 @@
-import com.ote.app.Mode;
-import com.ote.app.model.FeatureParser;
-import com.ote.app.view.ViewFactory;
-import com.ote.app.view.feature.FeaturePresenter;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**

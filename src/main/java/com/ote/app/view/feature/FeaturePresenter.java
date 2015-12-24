@@ -1,63 +1,33 @@
 package com.ote.app.view.feature;
 
 import com.ote.app.model.Feature;
+import com.ote.app.model.FeatureFormatter;
 import com.ote.app.model.FeatureParser;
 import com.ote.app.view.AbstractPresenter;
-import com.sun.istack.internal.NotNull;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.stream.Collectors;
 
 /**
- * Created by Olivier on 17/12/2015.
+ * Created by Olivier on 23/12/2015.
  */
-public final class FeaturePresenter extends AbstractPresenter {
+public class FeaturePresenter extends AbstractPresenter<Feature, IFeatureView> {
 
-    private FeaturePresenter() {
-
+    public FeaturePresenter(IFeatureView view) {
+        super(view);
     }
 
-    private static final FeaturePresenter INSTANCE = new FeaturePresenter();
-
-    public static FeaturePresenter getInstance() {
-        return INSTANCE;
+    @Override
+    protected void fillView(Feature model) {
+        this.getView().setTitle(model.getTitle());
+        this.getView().setDescription(model.getDescription().getLine().
+                stream().map(l -> l.getContent()).collect(Collectors.joining("\r\n")));
     }
 
-    private ObjectProperty<Feature> feature = new SimpleObjectProperty<>();
-
-    public ObjectProperty<Feature> featureProperty() {
-        return this.feature;
-    }
-
-    public void register(IFeatureView view) {
-
-        super.register(view);
-
-        this.feature.addListener((observable, oldValue, newValue) -> this.updateView(view, newValue));
-    }
-
-    private void updateView(IFeatureView view, @NotNull Feature feature) {
-
-        view.setTitle(feature.getTitle());
-        view.setDescription(feature.getDescription().getLine().
-                stream().map(line -> line.getContent()).collect(Collectors.toList()));
-    }
-
-    public void register(IFeatureEditView view) {
-
-        this.register((IFeatureView) view);
-
-        // On validate, change the feature with view data
-        view.getValidateCommand().addHandler(p -> {
-            StringBuilder sb = new StringBuilder("Feature: ").
-                    append(view.getTitle()).
-                    append("\r\n").
-                    append(view.getDescription().stream().collect(Collectors.joining("\r\n")));
-
-            this.feature.set(FeatureParser.parseFeature(sb.toString()));
-        });
-
-        super.register(view);
+    @Override
+    protected void fillModel() {
+        String featureString = FeatureFormatter.format(this.getView().getTitle(), this.getView().getDescription());
+        this.setModel(FeatureParser.parseFeature(featureString));
     }
 }

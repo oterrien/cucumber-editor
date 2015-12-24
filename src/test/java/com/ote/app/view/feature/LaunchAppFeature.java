@@ -1,7 +1,8 @@
 package com.ote.app.view.feature;
 
-import com.ote.app.view.ViewFactory;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -14,12 +15,14 @@ public class LaunchAppFeature extends Application {
         launch(args);
     }
 
-
     @Override
     public void start(Stage stage) throws Exception {
 
-        stage.setScene(new Scene(ViewFactory.getInstance().createFeature()));
-        stage.setTitle("Cucumber Editor");
+        FXMLLoader fxmlLoader = new FXMLLoader(ClassLoader.getSystemResource("com/ote/app/view/feature/Feature.fxml"));
+        Parent node = fxmlLoader.load();
+
+        stage.setScene(new Scene(node));
+        stage.setTitle("Feature Editor");
         stage.setWidth(800);
         stage.setHeight(240);
         stage.show();
