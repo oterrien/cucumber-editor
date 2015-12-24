@@ -1,0 +1,29 @@
+.root {
+    -fx-background-color: "White";
+}
+
+.name {
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI";
+    -fx-fill: "ForestGreen";
+    -fx-font-weight: bold;
+}
+
+.title {
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI";
+    -fx-font-style: italic;
+
+}
+
+.description {
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI";
+}
+
+.comment {
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI";
+    -fx-font-style: italic;
+    -fx-fill: "green";
+}
