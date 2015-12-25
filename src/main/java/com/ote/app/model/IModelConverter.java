@@ -8,4 +8,6 @@ public interface IModelConverter<M> {
     IParser<M> getParser();
 
     IFormatter<M> getFormatter();
+
+    IDisplayFormatter<M> getDisplayFormatter();
 }

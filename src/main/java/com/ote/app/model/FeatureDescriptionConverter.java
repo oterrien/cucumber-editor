@@ -1,35 +1,26 @@
 package com.ote.app.model;
 
+import javafx.scene.Node;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.stream.IntStream;
 
 /**
  * Created by Olivier on 24/12/2015.
  */
-public final class FeatureDescriptionConverter implements IModelConverter<Description> {
+public final class FeatureDescriptionConverter extends AbstractConverter<Description> implements IModelConverter<Description> {
 
     private static final FeatureDescriptionConverter INSTANCE = new FeatureDescriptionConverter();
 
-    private IParser<Description> parser;
-    private IFormatter<Description> formatter;
-
     private FeatureDescriptionConverter() {
-
-        parser = new Parser();
-        formatter = new Formatter();
+        super(new Parser(), new Formatter(), new DisplayFormatter());
     }
 
     public static FeatureDescriptionConverter getInstance() {
         return INSTANCE;
-    }
-
-    @Override
-    public IParser<Description> getParser() {
-        return this.parser;
-    }
-
-    @Override
-    public IFormatter<Description> getFormatter() {
-        return this.formatter;
     }
 
     private static class Parser implements IParser<Description> {
@@ -62,6 +53,24 @@ public final class FeatureDescriptionConverter implements IModelConverter<Descri
             model.getLine().stream().
                     forEach(l -> sb.append(l.isIsCommented() ? "# " : "").append(l.getContent()).append("\r\n"));
             return sb.toString();
+        }
+    }
+
+    private static class DisplayFormatter implements IDisplayFormatter<Description> {
+
+        @Override
+        public Collection<Node> format(Description model) {
+
+            Collection<Node> list = new ArrayList<>(10);
+
+            model.getLine().stream().map(l -> l.getContent()).forEach(content -> {
+                list.add(new Text("\r\n"));
+                Text text = new Text(content);
+                text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
+                list.add(text);
+            });
+
+            return list;
         }
     }
 }

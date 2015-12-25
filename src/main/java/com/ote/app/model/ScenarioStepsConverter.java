@@ -1,5 +1,11 @@
 package com.ote.app.model;
 
+import javafx.scene.Node;
+import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -7,31 +13,21 @@ import java.util.stream.IntStream;
 /**
  * Created by Olivier on 24/12/2015.
  */
-public final class ScenarioStepsConverter implements IModelConverter<Steps> {
+public final class ScenarioStepsConverter extends AbstractConverter<Steps> implements IModelConverter<Steps> {
 
     private static final ScenarioStepsConverter INSTANCE = new ScenarioStepsConverter();
 
     private IParser<Steps> parser;
     private IFormatter<Steps> formatter;
+    private IDisplayFormatter<Steps> displayFormatter;
+
 
     private ScenarioStepsConverter() {
-
-        parser = new Parser();
-        formatter = new Formatter();
+        super(new Parser(), new Formatter(), new DisplayFormatter());
     }
 
     public static ScenarioStepsConverter getInstance() {
         return INSTANCE;
-    }
-
-    @Override
-    public IParser<Steps> getParser() {
-        return this.parser;
-    }
-
-    @Override
-    public IFormatter<Steps> getFormatter() {
-        return this.formatter;
     }
 
     private static class Parser implements IParser<Steps> {
@@ -50,16 +46,23 @@ public final class ScenarioStepsConverter implements IModelConverter<Steps> {
 
                         if (matcher.find()) {
 
+                            Definition stepDef = new Definition();
                             Step step = new Step();
                             step.setType(StepType.fromValue(matcher.group(1).trim()));
                             step.setContent(matcher.group(2).trim());
-                            steps.getLineOrDefinition().add(step);
-
+                            stepDef.setStep(step);
+                            steps.getLineOrDefinition().add(stepDef);
                         } else if (stepStr.startsWith("|")) {
 
-                            Step step = (Step) steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
-                            // TODO table
+                            Definition stepDef = (Definition) steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
 
+                            List<String> table = new ArrayList<>(10);
+                            table.add(stepStr);
+                            while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
+                                stepStr = text[++i].trim();
+                                table.add(stepStr);
+                            }
+                            stepDef.setTable(TableConverter.getInstance().getParser().parse(table.toArray(new String[0])));
                         } else {
                             Line line = new Line();
                             line.setContent(text[i].replaceAll("(\t)", "").trim());
@@ -84,29 +87,69 @@ public final class ScenarioStepsConverter implements IModelConverter<Steps> {
             model.getLineOrDefinition().stream().forEach(lineOrStep -> {
 
                 if (lineOrStep instanceof Line) {
-                    sb.append(format((Line)lineOrStep));
+                    sb.append(format((Line) lineOrStep));
                 } else {
-                    sb.append(format((Step)lineOrStep));
+                    sb.append(format((Definition) lineOrStep));
                 }
             });
 
             return sb.toString();
         }
 
-        private String format(Line line){
+        private String format(Line line) {
+
             StringBuilder sb = new StringBuilder();
             sb.append(line.isIsCommented() ? "# " : "").append(line.getContent()).append("\r\n");
             return sb.toString();
         }
 
-        private String format(Step step){
+        private String format(Definition stepDef) {
 
             StringBuilder sb = new StringBuilder();
-
-            sb.append(step.getType().value().toLowerCase()).append(" ").append(step.getContent()).append("\r\n");
-            // TODO table
+            sb.append(stepDef.getStep().getType().value().toLowerCase()).append(" ").
+                    append(stepDef.getStep().getContent()).append("\r\n");
+            if (stepDef.getTable() != null) {
+                sb.append(TableConverter.getInstance().getFormatter().format(stepDef
+                        .getTable())).append("\r\n");
+            }
             return sb.toString();
         }
+    }
 
+    private static class DisplayFormatter implements IDisplayFormatter<Steps> {
+
+        @Override
+        public Collection<Node> format(Steps model) {
+
+            Collection<Node> list = new ArrayList<>(10);
+
+            model.getLineOrDefinition().forEach(lineOfDefinition -> {
+
+                list.add(new Text("\r\n"));
+
+                if (lineOfDefinition instanceof Line) {
+                    Line line = (Line) lineOfDefinition;
+                    String content = line.getContent();
+                    Text text = new Text(content);
+                    text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
+                    list.add(text);
+                } else {
+                    Definition stepDef = (Definition) lineOfDefinition;
+                    Step step = stepDef.getStep();
+                    Text stepName = new Text(step.getType().value().toLowerCase());
+                    stepName.getStyleClass().add("step");
+                    list.add(stepName);
+                    Text stepContent = new Text("\t " + step.getContent());
+                    stepContent.getStyleClass().add("description");
+                    list.add(stepContent);
+                    if (stepDef.getTable() != null) {
+                        list.add(new Text("\r\n"));
+                        list.addAll(TableConverter.getInstance().getDisplayFormatter().format(stepDef.getTable()));
+                    }
+                }
+            });
+
+            return list;
+        }
     }
 }

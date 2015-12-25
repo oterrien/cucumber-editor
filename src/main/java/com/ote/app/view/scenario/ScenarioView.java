@@ -1,7 +1,8 @@
 package com.ote.app.view.scenario;
 
 import com.ote.app.Mode;
-import com.ote.app.model.*;
+import com.ote.app.model.Scenario;
+import com.ote.app.model.ScenarioConverter;
 import com.ote.app.view.AbstractEditableView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -9,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 /**
@@ -87,35 +87,8 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
 
         this.displayPane.getChildren().clear();
 
-        Text name = new Text("Scenario: ");
-        name.getStyleClass().add("name");
-        this.displayPane.getChildren().add(name);
-
-        Text title = new Text(this.getTitle());
-        title.getStyleClass().add("title");
-        this.displayPane.getChildren().add(title);
-
-        Steps steps = ScenarioStepsConverter.getInstance().getParser().parse(this.getSteps());
-        steps.getLineOrDefinition().stream().forEach(lineOfDefinition -> {
-
-            this.displayPane.getChildren().add(new Text("\r\n"));
-
-            if (lineOfDefinition instanceof Line) {
-                Line line = (Line) lineOfDefinition;
-                String content = line.getContent();
-                Text text = new Text(content);
-                text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
-                this.displayPane.getChildren().add(text);
-            } else {
-                Step step = (Step) lineOfDefinition;
-                Text stepName = new Text(step.getType().value().toLowerCase());
-                stepName.getStyleClass().add("step");
-                this.displayPane.getChildren().add(stepName);
-                Text stepContent = new Text("\t " + step.getContent());
-                stepContent.getStyleClass().add("description");
-                this.displayPane.getChildren().add(stepContent);
-            }
-        });
+        Scenario scenario = this.getPresenter().getModel();
+        this.displayPane.getChildren().addAll(ScenarioConverter.getInstance().getDisplayFormatter().format(scenario));
     }
 
     private static final String STANDARD_SCENARIO =
@@ -124,6 +97,8 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
                     "\tand a customer named \"Wilson\"\r\n" +
                     "\tand a blog named \"Expensive Therapy\" owned by \"Wilson\"\r\n" +
                     "\twhen I open the blog\r\n" +
+                    "| toto | titi |\r\n" +
+                    "| dodo | data |\r\n" +
                     "\tthen the blog is called\r\n";
 
     public void load() {

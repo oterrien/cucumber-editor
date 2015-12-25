@@ -120,28 +120,17 @@
     <xs:element name="table">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="header" minOccurs="1" maxOccurs="1"/>
-                <xs:element ref="row" minOccurs="1" maxOccurs="unbounded"/>
+                <xs:element name="header" type="row" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="row" type="row" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="header">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="cell" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="row">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="cell" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute name="isCommented" type="xs:boolean"/>
-        </xs:complexType>
-    </xs:element>
-
+    <xs:complexType name="row">
+        <xs:sequence>
+            <xs:element name="cell" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="isCommented" type="xs:boolean"/>
+    </xs:complexType>
 
 </xs:schema>

@@ -1,36 +1,25 @@
 package com.ote.app.model;
 
+import javafx.scene.Node;
+import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 /**
  * Created by Olivier on 24/12/2015.
  */
-public class ScenarioConverter implements IModelConverter<Scenario> {
+public final class ScenarioConverter extends AbstractConverter<Scenario> implements IModelConverter<Scenario> {
 
     private static final ScenarioConverter INSTANCE = new ScenarioConverter();
 
-    private IParser<Scenario> parser;
-    private IFormatter<Scenario> formatter;
-
     private ScenarioConverter() {
-
-        this.parser = new Parser();
-        this.formatter = new Formatter();
+        super(new Parser(), new Formatter(), new DisplayFormatter());
     }
 
     public static ScenarioConverter getInstance() {
         return INSTANCE;
-    }
-
-    @Override
-    public IParser<Scenario> getParser() {
-        return parser;
-    }
-
-    @Override
-    public IFormatter<Scenario> getFormatter() {
-        return formatter;
     }
 
     private static class Parser implements IParser<Scenario> {
@@ -42,7 +31,6 @@ public class ScenarioConverter implements IModelConverter<Scenario> {
             scenario.setTitle(text[0].replaceAll("Scenario:", "").trim());
             scenario.setSteps(ScenarioStepsConverter.getInstance().getParser().
                     parse(Arrays.copyOfRange(text, 1, text.length)));
-
             return scenario;
         }
     }
@@ -57,9 +45,28 @@ public class ScenarioConverter implements IModelConverter<Scenario> {
                     append("\r\n").
                     append(ScenarioStepsConverter.getInstance().getFormatter().
                             format(model.getSteps()));
-
             return sb.toString();
         }
+    }
 
+    private static class DisplayFormatter implements IDisplayFormatter<Scenario> {
+
+        @Override
+        public Collection<Node> format(Scenario model) {
+
+            Collection<Node> list = new ArrayList<>(10);
+
+            Text name = new Text("Scenario: ");
+            name.getStyleClass().add("name");
+            list.add(name);
+
+            Text title = new Text(model.getTitle());
+            title.getStyleClass().add("title");
+            list.add(title);
+
+            list.addAll(ScenarioStepsConverter.getInstance().getDisplayFormatter().format(model.getSteps()));
+
+            return list;
+        }
     }
 }
