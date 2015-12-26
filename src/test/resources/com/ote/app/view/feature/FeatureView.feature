@@ -29,7 +29,7 @@ Feature: Feature View Management
     Given a standard feature
     When I load the feature
     And I update the feature's title to "Feature View Management UPDATED"
-    And I validate the update
+    And I validate the feature update
     Then the feature's title should be "Feature View Management UPDATED"
     And the feature's description should be:
       """
@@ -47,7 +47,7 @@ Feature: Feature View Management
       As a tester
       I want to update feature's description
       """
-    And I validate the update
+    And I validate the feature update
     Then the feature's title should be "Feature View Management"
     And the feature's description should be:
       """

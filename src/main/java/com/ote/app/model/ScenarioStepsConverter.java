@@ -16,11 +16,6 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
 
     private static final ScenarioStepsConverter INSTANCE = new ScenarioStepsConverter();
 
-    private IParser<Steps> parser;
-    private IFormatter<Steps> formatter;
-    private IDisplayFormatter<Steps> displayFormatter;
-
-
     private ScenarioStepsConverter() {
         super(new Parser(), new Formatter(), new DisplayFormatter());
     }
@@ -46,7 +41,7 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
 
                     Definition stepDef = new Definition();
                     Step step = new Step();
-                    step.setType(StepType.fromValue(matcher.group(1).trim()));
+                    step.setType(StepType.fromValue(matcher.group(1).trim().toLowerCase()));
                     step.setContent(matcher.group(2).trim());
                     stepDef.setStep(step);
                     steps.getLineOrDefinition().add(stepDef);

@@ -68,8 +68,6 @@ public final class TableConverter extends AbstractConverter<Table> implements IM
 
             Collection<String> format = Helper.pad(Helper.extract(model), " | ", "| ", " |");
 
-            System.out.println(format);
-
             list.add(new Text("\t"));
             Text text = new Text(format.stream().findFirst().get());
             text.getStyleClass().add("table_header");
@@ -144,11 +142,8 @@ public final class TableConverter extends AbstractConverter<Table> implements IM
 
             return param.stream().
                     map(e -> {
-                        IntStream.range(0, e.size()).forEach(i -> {
-                            StringBuilder sb = new StringBuilder().
-                                    append(StringUtils.rightPad(e.get(i).trim(), maxLengthPerColumn.get(i)));
-                            e.set(i, sb.toString());
-                        });
+                        IntStream.range(0, e.size()).forEach(i ->
+                                e.set(i, StringUtils.rightPad(e.get(i).trim(), maxLengthPerColumn.get(i))));
                         return e;
                     }).
                     map(e -> e.stream().collect(Collectors.joining(delimiter, startDelimiter, endDelimiter))).

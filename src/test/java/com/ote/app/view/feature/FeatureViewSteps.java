@@ -1,12 +1,13 @@
 package com.ote.app.view.feature;
 
-import com.ote.app.model.*;
+import com.ote.app.model.Description;
+import com.ote.app.model.Feature;
+import com.ote.app.model.FeatureConverter;
+import com.ote.app.model.FeatureDescriptionConverter;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.assertj.core.api.Assertions;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 17/12/2015.
@@ -35,49 +36,44 @@ public class FeatureViewSteps {
     }
 
     @Then("the feature's title should be \"(.*)\"")
-    public void the_feature_title_equals(String title) throws Throwable {
+    public void the_feature_title_equals(String expected) throws Throwable {
 
-        Assertions.assertThat(title).isEqualTo(this.view.getTitle());
+        Assertions.assertThat(expected).isEqualTo(this.view.getTitle());
     }
 
     @Then("the feature's description should be:")
-    public void the_feature_description_equals(String newDescription) throws Throwable {
+    public void the_feature_description_equals(String expected) throws Throwable {
 
-        Description description = FeatureDescriptionConverter.getInstance().getParser().parse(newDescription);
+        Description expectedDescription = FeatureDescriptionConverter.getInstance().getParser().parse(expected);
 
-        Assertions.assertThat(description.getLine().
-                stream().
-                map(l -> l.getContent()).
-                collect(Collectors.joining("\r\n"))).
-                isEqualTo(this.view.getDescription());
+        Description viewDescription = FeatureDescriptionConverter.getInstance().getParser().parse(this.view.getDescription());
+
+        Assertions.assertThat(FeatureDescriptionConverter.getInstance().getFormatter().format(expectedDescription)).
+                isEqualTo(FeatureDescriptionConverter.getInstance().getFormatter().format(viewDescription));
     }
 
     @When("I update the feature's title to \"(.*)\"")
-    public void I_update_the_feature_title(String newTitle) throws Throwable {
+    public void I_update_the_feature_title(String value) throws Throwable {
 
-        this.view.setTitle(newTitle);
+        this.view.setTitle(value);
     }
 
     @When("I update the feature's description to:")
-    public void I_update_the_feature_description(String newDescription) throws Throwable {
+    public void I_update_the_feature_description(String value) throws Throwable {
 
-        newDescription = newDescription.replaceAll("(\r\n|\n\r|\r|\n)", "\r\n");
-        this.view.setDescription(newDescription);
+        this.view.setDescription(value);
     }
 
-    @When("I validate the update")
-    public void I_validate_the_update() throws Throwable {
+    @When("I validate the feature update")
+    public void I_validate_the_feature_update() throws Throwable {
 
         this.view.validate();
     }
 
     @Then("the feature should be:")
-    public void the_feature_is(String featureAsText) throws Throwable {
+    public void the_feature_is(String expected) throws Throwable {
 
-        Feature feature = FeatureConverter.getInstance().getParser().parse(featureAsText);
-
-        Assertions.assertThat(feature.getTitle()).isEqualTo(this.feature.getTitle());
-        Assertions.assertThat(feature.getDescription().getLine().stream().map(line -> line.getContent()).collect(Collectors.joining("\r\n"))).
-                isEqualTo(this.feature.getDescription().getLine().stream().map(line -> line.getContent()).collect(Collectors.joining("\r\n")));
+        expected = FeatureConverter.getInstance().getFormatter().format(FeatureConverter.getInstance().getParser().parse(expected));
+        Assertions.assertThat(expected).isEqualTo(FeatureConverter.getInstance().getFormatter().format(this.feature));
     }
 }
