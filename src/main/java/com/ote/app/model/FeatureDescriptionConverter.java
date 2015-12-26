@@ -47,11 +47,11 @@ public final class FeatureDescriptionConverter extends AbstractConverter<Descrip
     private static class Formatter implements IFormatter<Description> {
 
         @Override
-        public String format(Description model) {
+        public String format(Description model, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder();
             model.getLine().stream().
-                    forEach(l -> sb.append(l.isIsCommented() ? "# " : "").append(l.getContent()).append("\r\n"));
+                    forEach(l -> sb.append(l.isIsCommented() ? "# " : (isIndented ? "\t" : "")).append(l.getContent()).append("\r\n"));
             return sb.toString();
         }
     }

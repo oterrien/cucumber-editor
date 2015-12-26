@@ -7,6 +7,7 @@ import javafx.scene.text.TextFlow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 24/12/2015.
@@ -31,7 +32,7 @@ public final class FeatureConverter extends AbstractConverter<Feature> implement
             Feature feature = new Feature();
             feature.setTitle(text[0].replaceAll("Feature:", "").trim());
             feature.setDescription(FeatureDescriptionConverter.getInstance().
-                    getParser().parse(Arrays.copyOfRange(text, 1, text.length)));
+                    getParser().parse(Arrays.asList(text).subList(1, text.length).stream().collect(Collectors.joining("\r\n"))));
 
             return feature;
         }
@@ -40,13 +41,13 @@ public final class FeatureConverter extends AbstractConverter<Feature> implement
     private static class Formatter implements IFormatter<Feature> {
 
         @Override
-        public String format(Feature model) {
+        public String format(Feature model, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder("Feature: ").
                     append(model.getTitle()).
                     append("\r\n").
                     append(FeatureDescriptionConverter.getInstance().
-                            getFormatter().format(model.getDescription()));
+                            getFormatter().format(model.getDescription(), isIndented));
             return sb.toString();
         }
     }

@@ -25,6 +25,5 @@ public class ScenarioPresenter extends AbstractPresenter<Scenario, IScenarioView
     protected void fillModel() {
         this.setModel(ScenarioConverter.getInstance().getParser().
                 parse(this.getView().getTitle(), this.getView().getSteps()));
-
     }
 }

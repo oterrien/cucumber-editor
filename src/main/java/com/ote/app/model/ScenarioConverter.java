@@ -6,6 +6,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 24/12/2015.
@@ -30,7 +31,7 @@ public final class ScenarioConverter extends AbstractConverter<Scenario> impleme
             Scenario scenario = new Scenario();
             scenario.setTitle(text[0].replaceAll("Scenario:", "").trim());
             scenario.setSteps(ScenarioStepsConverter.getInstance().getParser().
-                    parse(Arrays.copyOfRange(text, 1, text.length)));
+                    parse(Arrays.asList(text).subList(1, text.length).stream().collect(Collectors.joining("\r\n"))));
             return scenario;
         }
     }
@@ -38,13 +39,13 @@ public final class ScenarioConverter extends AbstractConverter<Scenario> impleme
     private static class Formatter implements IFormatter<Scenario> {
 
         @Override
-        public String format(Scenario model) {
+        public String format(Scenario model, boolean isIndented) {
 
-            StringBuilder sb = new StringBuilder("Feature: ").
+            StringBuilder sb = new StringBuilder("Scenario: ").
                     append(model.getTitle()).
                     append("\r\n").
                     append(ScenarioStepsConverter.getInstance().getFormatter().
-                            format(model.getSteps()));
+                            format(model.getSteps(), isIndented));
             return sb.toString();
         }
     }

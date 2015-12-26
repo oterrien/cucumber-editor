@@ -35,4 +35,26 @@ public class FeatureParserTest {
         Assertions.assertThat(description.getLine().get(1).getContent()).isEqualTo("As a user");
         Assertions.assertThat(description.getLine().get(2).getContent()).isEqualTo("I want to create new feature and update data");
     }
+
+    @Test
+    public void feature_model_should_be_formatted() {
+
+        Feature feature = new Feature();
+        feature.setTitle("Feature View Management");
+
+        Description description = new Description();
+        Line line = new Line();
+        line.setContent("In order to test the feature view");
+        description.getLine().add(line);
+        line = new Line();
+        line.setContent("As a user");
+        description.getLine().add(line);
+        line = new Line();
+        line.setContent("I want to create new feature and update data");
+        description.getLine().add(line);
+        feature.setDescription(description);
+
+        Assertions.assertThat(FeatureDescriptionConverter.getInstance().getFormatter().format(description, true)).isEqualTo(DESCRIPTION);
+        Assertions.assertThat(FeatureConverter.getInstance().getFormatter().format(feature, true)).isEqualTo(FEATURE);
+    }
 }

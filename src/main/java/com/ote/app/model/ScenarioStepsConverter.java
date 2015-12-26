@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 /**
  * Created by Olivier on 24/12/2015.
@@ -37,41 +36,40 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
 
             Steps steps = new Steps();
 
-            IntStream.range(0, text.length).
-                    forEach(i -> {
-                        String stepStr = text[i].trim();
+            for (int i = 0; i < text.length; i++) {
+                String stepStr = text[i].trim();
 
-                        Pattern pattern = Pattern.compile("^([Gg]iven|[Ww]hen|[Tt]hen|[Aa]nd|[Bb]ut)(.*)$");
-                        Matcher matcher = pattern.matcher(stepStr);
+                Pattern pattern = Pattern.compile("^([Gg]iven|[Ww]hen|[Tt]hen|[Aa]nd|[Bb]ut)(.*)$");
+                Matcher matcher = pattern.matcher(stepStr);
 
-                        if (matcher.find()) {
+                if (matcher.find()) {
 
-                            Definition stepDef = new Definition();
-                            Step step = new Step();
-                            step.setType(StepType.fromValue(matcher.group(1).trim()));
-                            step.setContent(matcher.group(2).trim());
-                            stepDef.setStep(step);
-                            steps.getLineOrDefinition().add(stepDef);
-                        } else if (stepStr.startsWith("|")) {
+                    Definition stepDef = new Definition();
+                    Step step = new Step();
+                    step.setType(StepType.fromValue(matcher.group(1).trim()));
+                    step.setContent(matcher.group(2).trim());
+                    stepDef.setStep(step);
+                    steps.getLineOrDefinition().add(stepDef);
+                } else if (stepStr.startsWith("|")) {
 
-                            Definition stepDef = (Definition) steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
+                    Definition stepDef = (Definition) steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
 
-                            List<String> table = new ArrayList<>(10);
-                            table.add(stepStr);
-                            while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
-                                stepStr = text[++i].trim();
-                                table.add(stepStr);
-                            }
-                            stepDef.setTable(TableConverter.getInstance().getParser().parse(table.toArray(new String[0])));
-                        } else {
-                            Line line = new Line();
-                            line.setContent(text[i].replaceAll("(\t)", "").trim());
-                            if (stepStr.startsWith("#")) {
-                                line.setIsCommented(true);
-                            }
-                            steps.getLineOrDefinition().add(line);
-                        }
-                    });
+                    List<String> table = new ArrayList<>(10);
+                    table.add(stepStr);
+                    while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
+                        stepStr = text[++i].trim();
+                        table.add(stepStr);
+                    }
+                    stepDef.setTable(TableConverter.getInstance().getParser().parse(table.toArray(new String[0])));
+                } else {
+                    Line line = new Line();
+                    line.setContent(text[i].replaceAll("(\t)", "").trim());
+                    if (stepStr.startsWith("#")) {
+                        line.setIsCommented(true);
+                    }
+                    steps.getLineOrDefinition().add(line);
+                }
+            }
 
             return steps;
         }
@@ -80,37 +78,40 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
     private static class Formatter implements IFormatter<Steps> {
 
         @Override
-        public String format(Steps model) {
+        public String format(Steps model, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder();
 
             model.getLineOrDefinition().stream().forEach(lineOrStep -> {
 
                 if (lineOrStep instanceof Line) {
-                    sb.append(format((Line) lineOrStep));
+                    sb.append(format((Line) lineOrStep, isIndented));
                 } else {
-                    sb.append(format((Definition) lineOrStep));
+                    sb.append(format((Definition) lineOrStep, isIndented));
                 }
             });
 
             return sb.toString();
         }
 
-        private String format(Line line) {
+        private String format(Line line, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(line.isIsCommented() ? "# " : "").append(line.getContent()).append("\r\n");
+            sb.append(line.isIsCommented() ? "# " : (isIndented ? "\t" : "")).append(line.getContent()).append("\r\n");
             return sb.toString();
         }
 
-        private String format(Definition stepDef) {
+        private String format(Definition stepDef, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(stepDef.getStep().getType().value().toLowerCase()).append(" ").
+            sb.append(isIndented ? "\t" : "").
+                    append(stepDef.getStep().getType().value().toLowerCase()).
+                    append(" ").
                     append(stepDef.getStep().getContent()).append("\r\n");
+
             if (stepDef.getTable() != null) {
                 sb.append(TableConverter.getInstance().getFormatter().format(stepDef
-                        .getTable())).append("\r\n");
+                        .getTable(), isIndented)).append("\r\n");
             }
             return sb.toString();
         }

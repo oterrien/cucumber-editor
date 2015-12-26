@@ -97,8 +97,9 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
                     "\tand a customer named \"Wilson\"\r\n" +
                     "\tand a blog named \"Expensive Therapy\" owned by \"Wilson\"\r\n" +
                     "\twhen I open the blog\r\n" +
-                    "| toto | titi |\r\n" +
-                    "| dodo | data |\r\n" +
+                    "\t| param1 | param2 |\r\n" +
+                    "\t| value11 | value12 |\r\n" +
+                    "\t| value21 | value22 |\r\n" +
                     "\tthen the blog is called\r\n";
 
     public void load() {
