@@ -3,9 +3,9 @@ package com.ote.app.model;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -189,4 +189,101 @@ public class ScenarioParserTest {
                 usingFieldByFieldElementComparator().
                 containsExactly(res.toArray(new String[0]));
     }
+
+    @Test
+    public void quotes_in_step_should_be_highlighted() {
+
+        String step = "give a step with \"quotes\" to be \'highligthed\' and a <parameter> to be displayed";
+
+        step = step.replaceAll("\"", "\'");
+
+        /*Pattern pattern = Pattern.compile("((?<=\")|(?=\"))");
+        Matcher matcher = pattern.matcher(step);
+
+        if (matcher.matches()) {
+            for (int i=0; i<matcher.groupCount();i++){
+                System.out.println(matcher.group(i));
+        }*/
+
+        String[] splitQuotes = step.split("((?<=\')|(?=\'))");
+
+        List<String> quotes = new ArrayList<>(10);
+        List<String> others = new ArrayList<>(10);
+        List<String> param = new ArrayList<>(10);
+        List<String> others2 = new ArrayList<>(10);
+
+        for (int i = 0; i < splitQuotes.length; i++) {
+
+            String str = splitQuotes[i].trim();
+
+            if (str.equals("\'")) {
+                i++;
+                str = splitQuotes[i].trim();
+                quotes.add("'" + str + "'");
+                i++;
+            } else {
+                others.add(str);
+            }
+        }
+
+        for (String other : others) {
+
+            other = other.replaceAll(">", "<");
+
+            String[] splitParam = other.split("((?<=<)|(?=<))");
+
+            for (int i = 0; i < splitParam.length; i++) {
+
+                String str = splitParam[i].trim();
+
+                if (str.equals("<")) {
+                    i++;
+                    str = splitParam[i].trim();
+                    param.add("<" + str + ">");
+                    i++;
+                } else {
+                    others2.add(str);
+                }
+            }
+
+        }
+
+        System.out.println("QUOTES: " + quotes);
+        System.out.println("PARAM : " + param);
+        System.out.println("DESCR : " + others2);
+
+    }
+
+    @Test
+    public void quotes_in_step_should_be_highlighted2() {
+
+        String step = "give a step with \"quotes\" to be \"highligthed\" and a <parameter> to be displayed";
+
+        step = step.replaceAll("\"", "'");
+
+        System.out.println(step);
+
+        Pattern pattern = Pattern.compile("(?<QUOTE>'([^']+[^'])')|(?<PARAMETER><([^<]+[^>])>)");
+        Matcher matcher = pattern.matcher(step);
+
+        List<String> quotes = new ArrayList<>(10);
+        List<String> parameters = new ArrayList<>(10);
+
+        while (matcher.find()) {
+            if (matcher.group("PARAMETER") != null) parameters.add(matcher.group("PARAMETER"));
+            if (matcher.group("QUOTE") != null) quotes.add(matcher.group("QUOTE"));
+        }
+
+        pattern = Pattern.compile("\\b(\\S*)\\b");
+        matcher = pattern.matcher(step);
+
+        while (matcher.find()) {
+            for(int i=0;i< matcher.groupCount();i++){
+                System.out.println(matcher.group(i));
+            }
+        }
+
+
+    }
+
 }
