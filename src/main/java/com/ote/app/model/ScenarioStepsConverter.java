@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by Olivier on 24/12/2015.
@@ -137,9 +136,7 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
                     stepName.getStyleClass().add("step");
                     list.add(stepName);
                     list.add(new Text("\t"));
-                    Text stepContent = new Text(step.getContent());
-                    stepContent.getStyleClass().add("description");
-                    list.add(stepContent);
+                    list.addAll(formatDescription(step.getContent()));
                     if (stepDef.getTable() != null) {
                         list.add(new Text("\r\n"));
                         list.addAll(TableConverter.getInstance().getDisplayFormatter().format(stepDef.getTable()));
@@ -150,34 +147,56 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
             return list;
         }
 
-        private List<Text> formatDescription(String description){
+        private List<Text> formatDescription(String step) {
 
-            description = description.replaceAll("\"", "'");
+            step = step.replaceAll("\"", "'");
 
-            Pattern pattern = Pattern.compile("(?<QUOTE>'([^']+)')|(?<PARAMETER><([^<]+[^>])>)");
-            Matcher matcher = pattern.matcher(description);
+            Pattern pattern = Pattern.compile("(?<QUOTE>'([^']+[^'])')|(?<PARAMETER><([^<]+[^>])>)");
+            Matcher matcher = pattern.matcher(step);
 
             List<String> quotes = new ArrayList<>(10);
             List<String> parameters = new ArrayList<>(10);
 
             while (matcher.find()) {
-                if (matcher.group("QUOTE") != null) quotes.add(matcher.group("QUOTE"));
-                if (matcher.group("PARAMETER") != null) parameters.add(matcher.group("PARAMETER"));
+
+                if (matcher.group("QUOTE") != null) {
+                    String value = matcher.group("QUOTE");
+                    quotes.add(value);
+                    step = step.replaceAll(value, "@quote(" + (quotes.size() - 1) + ")");
+                }
+
+                if (matcher.group("PARAMETER") != null) {
+                    String value = matcher.group("PARAMETER");
+                    parameters.add(value);
+                    step = step.replaceAll(value, "@parameter(" + (parameters.size() - 1) + ")");
+                }
             }
 
-            List<Text> quotesText = quotes.stream().map(str -> {
-                Text text = new Text(str);
-                text.getStyleClass().add("quote");
-                return text;
-            }).collect(Collectors.toList());
+            List<Text> textList = new ArrayList<>(100);
+            String[] stepWords = step.split("\\p{Space}");
+            for (String word : stepWords) {
+                if (word.startsWith("@quote")) {
+                    pattern = Pattern.compile("(\\d+)");
+                    matcher = pattern.matcher(step);
+                    matcher.find();
+                    Text text = new Text(quotes.get(Integer.parseInt(matcher.group(0))) + " ");
+                    text.getStyleClass().add("quote");
+                    textList.add(text);
+                } else if (word.startsWith("@parameter")) {
+                    pattern = Pattern.compile("(\\d+)");
+                    matcher = pattern.matcher(step);
+                    matcher.find();
+                    Text text = new Text(parameters.get(Integer.parseInt(matcher.group(0))) + " ");
+                    text.getStyleClass().add("parameter");
+                    textList.add(text);
+                } else {
+                    Text text = new Text(word + " ");
+                    text.getStyleClass().add("description");
+                    textList.add(text);
+                }
+            }
 
-            List<Text> parametersText = parameters.stream().map(str -> {
-                Text text = new Text(str);
-                text.getStyleClass().add("parameter");
-                return text;
-            }).collect(Collectors.toList());
-
-            return null;
+            return textList;
 
         }
     }
