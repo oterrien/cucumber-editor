@@ -3,9 +3,7 @@ package com.ote.app.model;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,30 +30,42 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
             Steps steps = new Steps();
 
             for (int i = 0; i < text.length; i++) {
-                String stepStr = text[i].trim();
+
+                String stepStr = text[i].trim().replaceAll("\"", "'");
 
                 Pattern pattern = Pattern.compile("^([Gg]iven|[Ww]hen|[Tt]hen|[Aa]nd|[Bb]ut)(.*)$");
                 Matcher matcher = pattern.matcher(stepStr);
 
                 if (matcher.find()) {
-
-                    Definition stepDef = new Definition();
-                    Step step = new Step();
-                    step.setType(StepType.fromValue(matcher.group(1).trim().toLowerCase()));
-                    step.setContent(matcher.group(2).trim());
-                    stepDef.setStep(step);
-                    steps.getLineOrDefinition().add(stepDef);
+                    steps.getLineOrDefinition().add(parseDefinition(matcher.group(1).toLowerCase(), matcher.group(2)));
                 } else if (stepStr.startsWith("|")) {
 
-                    Definition stepDef = (Definition) steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
+                    Object previousLine = steps.getLineOrDefinition().get(steps.getLineOrDefinition().size() - 1);
 
-                    List<String> table = new ArrayList<>(10);
-                    table.add(stepStr);
-                    while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
-                        stepStr = text[++i].trim();
+                    if (previousLine instanceof Definition) {
+
+                        Definition stepDef = (Definition) previousLine;
+
+                        List<String> table = new ArrayList<>(10);
                         table.add(stepStr);
+                        while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
+                            stepStr = text[++i].trim();
+                            table.add(stepStr);
+                        }
+                        stepDef.setTable(TableConverter.getInstance().getParser().parse(table.toArray(new String[0])));
+                    } else {
+                        Line line = new Line();
+                        line.setIsCommented(true);
+                        line.setContent("#" + stepStr.trim());
+                        steps.getLineOrDefinition().add(line);
+                        while (i + 1 < text.length && text[i + 1].trim().startsWith("|")) {
+                            stepStr = text[++i].trim();
+                            line = new Line();
+                            line.setIsCommented(true);
+                            line.setContent("#" + stepStr.trim());
+                            steps.getLineOrDefinition().add(line);
+                        }
                     }
-                    stepDef.setTable(TableConverter.getInstance().getParser().parse(table.toArray(new String[0])));
                 } else {
                     Line line = new Line();
                     line.setContent(text[i].replaceAll("(\t)", "").trim());
@@ -67,6 +77,15 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
             }
 
             return steps;
+        }
+
+        private Definition parseDefinition(String stepName, String stepText) {
+            Definition stepDef = new Definition();
+            Step step = new Step();
+            step.setType(StepType.fromValue(stepName.trim()));
+            step.setContent(stepText.trim());
+            stepDef.setStep(step);
+            return stepDef;
         }
     }
 
@@ -92,7 +111,7 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
         private String format(Line line, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(line.isIsCommented() ? "# " : (isIndented ? "\t" : "")).append(line.getContent()).append("\r\n");
+            sb.append((isIndented ? "\t" : "")).append(line.getContent().replaceAll("\"", "'")).append("\r\n");
             return sb.toString();
         }
 
@@ -100,9 +119,9 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
 
             StringBuilder sb = new StringBuilder();
             sb.append(isIndented ? "\t" : "").
-                    append(stepDef.getStep().getType().value().toLowerCase()).
+                    append(stepDef.getStep().getType().value().toLowerCase().replaceAll("\"", "'")).
                     append(" ").
-                    append(stepDef.getStep().getContent()).append("\r\n");
+                    append(stepDef.getStep().getContent().replaceAll("\"", "'")).append("\r\n");
 
             if (stepDef.getTable() != null) {
                 sb.append(TableConverter.getInstance().getFormatter().format(stepDef
@@ -120,75 +139,55 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
             Collection<Node> list = new ArrayList<>(10);
 
             model.getLineOrDefinition().forEach(lineOfDefinition -> {
-
                 list.add(new Text("\r\n"));
-
                 if (lineOfDefinition instanceof Line) {
-                    Line line = (Line) lineOfDefinition;
-                    String content = line.getContent();
-                    Text text = new Text(content);
-                    text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
-                    list.add(text);
+                    list.add(format((Line) lineOfDefinition));
                 } else {
-                    Definition stepDef = (Definition) lineOfDefinition;
-                    Step step = stepDef.getStep();
-                    Text stepName = new Text(step.getType().value().toLowerCase());
-                    stepName.getStyleClass().add("step");
-                    list.add(stepName);
-                    list.add(new Text("\t"));
-                    list.addAll(formatDescription(step.getContent()));
-                    if (stepDef.getTable() != null) {
-                        list.add(new Text("\r\n"));
-                        list.addAll(TableConverter.getInstance().getDisplayFormatter().format(stepDef.getTable()));
-                    }
+                    list.addAll(format((Definition) lineOfDefinition));
                 }
             });
 
             return list;
         }
 
-        private List<Text> formatDescription(String step) {
+        private Node format(Line line) {
 
-            step = step.replaceAll("\"", "'");
+            String content = line.getContent();
+            Text text = new Text(content);
+            text.getStyleClass().add(content.startsWith("#") ? "comment" : "description");
+            return text;
+        }
+
+        private List<Node> format(Definition stepDef) {
+
+            List<Node> textList = new ArrayList<>(100);
+
+            Step step = stepDef.getStep();
+            Text stepName = new Text(step.getType().value().toLowerCase());
+            stepName.getStyleClass().add("step");
+            textList.add(stepName);
+            textList.add(new Text("\t"));
+
+            String content = step.getContent();
 
             Pattern pattern = Pattern.compile("(?<QUOTE>'([^']+[^'])')|(?<PARAMETER><([^<]+[^>])>)");
-            Matcher matcher = pattern.matcher(step);
+            Matcher matcher = pattern.matcher(content);
 
-            List<String> quotes = new ArrayList<>(10);
-            List<String> parameters = new ArrayList<>(10);
+            Map<String, List<String>> map = new HashMap<>(10);
 
             while (matcher.find()) {
-
                 if (matcher.group("QUOTE") != null) {
-                    String value = matcher.group("QUOTE");
-                    quotes.add(value);
-                    step = step.replaceAll(value, "@quote(" + (quotes.size() - 1) + ")");
-                }
-
-                if (matcher.group("PARAMETER") != null) {
-                    String value = matcher.group("PARAMETER");
-                    parameters.add(value);
-                    step = step.replaceAll(value, "@parameter(" + (parameters.size() - 1) + ")");
+                    content = extract(content, matcher, "QUOTE", map);
+                } else if (matcher.group("PARAMETER") != null) {
+                    content = extract(content, matcher, "PARAMETER", map);
                 }
             }
 
-            List<Text> textList = new ArrayList<>(100);
-            String[] stepWords = step.split("\\p{Space}");
-            for (String word : stepWords) {
-                if (word.startsWith("@quote")) {
-                    pattern = Pattern.compile("(\\d+)");
-                    matcher = pattern.matcher(step);
-                    matcher.find();
-                    Text text = new Text(quotes.get(Integer.parseInt(matcher.group(0))) + " ");
-                    text.getStyleClass().add("quote");
-                    textList.add(text);
-                } else if (word.startsWith("@parameter")) {
-                    pattern = Pattern.compile("(\\d+)");
-                    matcher = pattern.matcher(step);
-                    matcher.find();
-                    Text text = new Text(parameters.get(Integer.parseInt(matcher.group(0))) + " ");
-                    text.getStyleClass().add("parameter");
-                    textList.add(text);
+            for (String word : content.split("\\p{Space}")) {
+                if (word.startsWith("@QUOTE")) {
+                    textList.add(getText(word, map.get("QUOTE"), "quote"));
+                } else if (word.startsWith("@PARAMETER")) {
+                    textList.add(getText(word, map.get("PARAMETER"), "parameter"));
                 } else {
                     Text text = new Text(word + " ");
                     text.getStyleClass().add("description");
@@ -196,8 +195,36 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
                 }
             }
 
-            return textList;
+            if (stepDef.getTable() != null) {
+                textList.add(new Text("\r\n"));
+                textList.addAll(TableConverter.getInstance().getDisplayFormatter().format(stepDef.getTable()));
+            }
 
+            return textList;
+        }
+
+        private String extract(String step, Matcher matcher, String group, Map<String, List<String>> map) {
+
+            List<String> list = map.get(group);
+            if (list == null) {
+                list = new ArrayList<>(10);
+                map.put(group, list);
+            }
+
+            String value = matcher.group(group);
+            list.add(value);
+            return step.replaceAll(value, "@" + group + "(" + (list.size() - 1) + ")");
+        }
+
+        private Text getText(String word, List<String> list, String cssStyle) {
+
+            Pattern pattern = Pattern.compile("(\\d+)");
+            Matcher matcher = pattern.matcher(word);
+            matcher.find();
+
+            Text text = new Text(list.get(Integer.parseInt(matcher.group(0))) + " ");
+            text.getStyleClass().add(cssStyle);
+            return text;
         }
     }
 }

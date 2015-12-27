@@ -43,14 +43,14 @@
                     <!-- add the constraint -->
                     <xs:element ref="background"/>
                     <xs:element ref="line"/>
-                    <xs:element name="scenario" type="scenario"/>
+                    <xs:element ref="scenario"/>
                     <xs:element ref="scenario-outline"/>
                 </xs:choice>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="scenario">
+    <xs:complexType name="scenarioType">
         <xs:sequence>
             <xs:element ref="title" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="steps" minOccurs="0" maxOccurs="1"/>
@@ -89,10 +89,18 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:element name="scenario">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="scenarioType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="background">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="scenario"/>
+                <xs:extension base="scenarioType"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
@@ -100,7 +108,7 @@
     <xs:element name="scenario-outline">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="scenario">
+                <xs:extension base="scenarioType">
                     <xs:sequence>
                         <xs:element ref="examples" minOccurs="1" maxOccurs="1"/>
                     </xs:sequence>

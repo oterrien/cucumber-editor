@@ -27,7 +27,7 @@ public class ScenarioParserTest {
     @Test
     public void scenario_text_should_be_loaded_into_model() {
 
-        Scenario scenario = ScenarioConverter.getInstance().getParser().parse(SCENARIO);
+        ScenarioType scenario = ScenarioConverter.getInstance().getParser().parse(SCENARIO);
 
         Assertions.assertThat(scenario).isNotNull();
         Assertions.assertThat(scenario.getTitle()).isEqualTo("Wilson posts to his own blog");
@@ -53,9 +53,9 @@ public class ScenarioParserTest {
     }
 
     @Test
-    public void feature_model_should_be_formatted() {
+    public void scenario_model_should_be_formatted() {
 
-        Scenario scenario = new Scenario();
+        ScenarioType scenario = new Scenario();
         scenario.setTitle("Wilson posts to his own blog");
 
         Steps steps = new Steps();
@@ -97,8 +97,8 @@ public class ScenarioParserTest {
 
         scenario.setSteps(steps);
 
-        Assertions.assertThat(ScenarioStepsConverter.getInstance().getFormatter().format(steps, true)).isEqualTo(STEPS);
-        Assertions.assertThat(ScenarioConverter.getInstance().getFormatter().format(scenario, true)).isEqualTo(SCENARIO);
+        Assertions.assertThat(ScenarioStepsConverter.getInstance().getFormatter().format(steps, true)).isEqualTo(STEPS.replaceAll("\"", "'"));
+        Assertions.assertThat(ScenarioConverter.getInstance().getFormatter().format(scenario, true)).isEqualTo(SCENARIO.replaceAll("\"", "'"));
     }
 
     private static final String STEP_WITH_TABLE = "given a step with table\r\n" +
@@ -182,8 +182,6 @@ public class ScenarioParserTest {
                 "| color  | value | result       |",
                 "| yellow | true  | foo          |",
                 "| red    | true  | a big result |");
-
-        System.out.println(TableConverter.Helper.extract(param, "\\|"));
 
         Assertions.assertThat(TableConverter.Helper.pad(TableConverter.Helper.extract(param, "\\|"), " | ", "| ", " |")).
                 usingFieldByFieldElementComparator().

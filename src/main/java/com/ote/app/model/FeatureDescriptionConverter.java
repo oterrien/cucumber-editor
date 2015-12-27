@@ -51,7 +51,7 @@ public final class FeatureDescriptionConverter extends AbstractConverter<Descrip
 
             StringBuilder sb = new StringBuilder();
             model.getLine().stream().
-                    forEach(l -> sb.append(l.isIsCommented() ? "# " : (isIndented ? "\t" : "")).append(l.getContent()).append("\r\n"));
+                    forEach(l -> sb.append(isIndented ? "\t" : "").append(l.getContent()).append("\r\n"));
             return sb.toString();
         }
     }

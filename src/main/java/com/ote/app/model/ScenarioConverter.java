@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Olivier on 24/12/2015.
  */
-public final class ScenarioConverter extends AbstractConverter<Scenario> implements IModelConverter<Scenario> {
+public final class ScenarioConverter extends AbstractConverter<ScenarioType> implements IModelConverter<ScenarioType> {
 
     private static final ScenarioConverter INSTANCE = new ScenarioConverter();
 
@@ -23,10 +23,10 @@ public final class ScenarioConverter extends AbstractConverter<Scenario> impleme
         return INSTANCE;
     }
 
-    private static class Parser implements IParser<Scenario> {
+    private static class Parser implements IParser<ScenarioType> {
 
         @Override
-        public Scenario parse(String... text) {
+        public ScenarioType parse(String... text) {
 
             Scenario scenario = new Scenario();
             scenario.setTitle(text[0].replaceAll("Scenario:", "").trim());
@@ -36,10 +36,10 @@ public final class ScenarioConverter extends AbstractConverter<Scenario> impleme
         }
     }
 
-    private static class Formatter implements IFormatter<Scenario> {
+    private static class Formatter implements IFormatter<ScenarioType> {
 
         @Override
-        public String format(Scenario model, boolean isIndented) {
+        public String format(ScenarioType model, boolean isIndented) {
 
             StringBuilder sb = new StringBuilder("Scenario: ").
                     append(model.getTitle()).
@@ -50,10 +50,10 @@ public final class ScenarioConverter extends AbstractConverter<Scenario> impleme
         }
     }
 
-    private static class DisplayFormatter implements IDisplayFormatter<Scenario> {
+    private static class DisplayFormatter implements IDisplayFormatter<ScenarioType> {
 
         @Override
-        public Collection<Node> format(Scenario model) {
+        public Collection<Node> format(ScenarioType model) {
 
             Collection<Node> list = new ArrayList<>(10);
 

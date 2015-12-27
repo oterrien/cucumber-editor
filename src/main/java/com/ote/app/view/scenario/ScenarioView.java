@@ -3,6 +3,7 @@ package com.ote.app.view.scenario;
 import com.ote.app.Mode;
 import com.ote.app.model.Scenario;
 import com.ote.app.model.ScenarioConverter;
+import com.ote.app.model.ScenarioType;
 import com.ote.app.view.AbstractEditableView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -15,7 +16,7 @@ import javafx.scene.text.TextFlow;
 /**
  * Created by Olivier on 24/12/2015.
  */
-public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenario> implements IScenarioView {
+public class ScenarioView extends AbstractEditableView<ScenarioPresenter, ScenarioType> implements IScenarioView {
 
     @FXML
     private TextFlow displayPane;
@@ -28,6 +29,8 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
 
     @FXML
     private TextArea steps;
+
+    private Type type;
 
     @FXML
     public void initialize() {
@@ -63,7 +66,17 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
 
     @Override
     public void setSteps(String steps) {
-        this.steps.setText(steps);
+        this.steps.setText(steps.replaceAll("\"", "'"));
+    }
+
+    @Override
+    public Type getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(Type type) {
+        this.type = type;
     }
 
     @FXML
@@ -87,7 +100,7 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
 
         this.displayPane.getChildren().clear();
 
-        Scenario scenario = this.getPresenter().getModel();
+        ScenarioType scenario = this.getPresenter().getModel();
         this.displayPane.getChildren().addAll(ScenarioConverter.getInstance().getDisplayFormatter().format(scenario));
     }
 

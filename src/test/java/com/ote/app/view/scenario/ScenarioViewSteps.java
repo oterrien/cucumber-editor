@@ -27,7 +27,7 @@ public class ScenarioViewSteps {
                     "\tthen the blog is called\r\n";
 
     private IScenarioView view = new ScenarioViewMock();
-    private Scenario scenario;
+    private ScenarioType scenario;
 
     @Given("a standard scenario")
     public void a_standard_scenario() throws Throwable {

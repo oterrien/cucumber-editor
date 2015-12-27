@@ -1,12 +1,13 @@
 package com.ote.app.view.scenario;
 
 import com.ote.app.model.Scenario;
+import com.ote.app.model.ScenarioType;
 import com.ote.app.view.AbstractView;
 
 /**
  * Created by Olivier on 26/12/2015.
  */
-public class ScenarioViewMock extends AbstractView<ScenarioPresenter, Scenario> implements IScenarioView {
+public class ScenarioViewMock extends AbstractView<ScenarioPresenter, ScenarioType> implements IScenarioView {
 
     private String title;
 
@@ -39,5 +40,15 @@ public class ScenarioViewMock extends AbstractView<ScenarioPresenter, Scenario> 
     @Override
     public void setSteps(String steps) {
         this.steps = steps;
+    }
+
+    @Override
+    public Type getType() {
+        return null;
+    }
+
+    @Override
+    public void setType(Type type) {
+
     }
 }
