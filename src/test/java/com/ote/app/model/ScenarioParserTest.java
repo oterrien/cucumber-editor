@@ -168,7 +168,6 @@ public class ScenarioParserTest {
 
         Assertions.assertThat(ScenarioStepsConverter.getInstance().getFormatter().format(steps, false)).
                 isEqualTo(STEP_WITH_TABLE_INDENTED);
-
     }
 
     @Test
