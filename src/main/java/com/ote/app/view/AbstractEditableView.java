@@ -2,12 +2,10 @@ package com.ote.app.view;
 
 import com.ote.app.Mode;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -21,15 +19,19 @@ public abstract class AbstractEditableView<P extends IPresenter<M, ? extends IVi
     private ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.INIT);
 
     private Pane displayPane, editPane;
-    private double prefHeight;
+    private SimpleDoubleProperty prefHeight = new SimpleDoubleProperty();
 
     protected void initialize(Pane displayPane, Pane editPane) {
 
         super.initialize();
 
+        this.prefHeight.set(displayPane.getPrefHeight());
+
         this.displayPane = displayPane;
+        this.initialize(displayPane);
+
         this.editPane = editPane;
-        this.prefHeight = displayPane.getPrefHeight();
+        this.initialize(editPane);
 
         // On validation or cancellation, change back the mode to DISPLAY
         this.getValidateCommand().addHandler(aVoid -> this.setMode(Mode.DISPLAY));
@@ -43,6 +45,25 @@ public abstract class AbstractEditableView<P extends IPresenter<M, ? extends IVi
                 edit();
             }
         });
+    }
+
+    private void initialize(Pane pane) {
+
+        if (pane.getParent() instanceof VBox) {
+            VBox.setVgrow(pane, Priority.NEVER);
+        }
+        
+        pane.setPrefHeight(this.prefHeight.doubleValue());
+        pane.setMinHeight(Region.USE_PREF_SIZE);
+        pane.setMaxHeight(Region.USE_PREF_SIZE);
+
+        this.prefHeight.addListener((observable, oldValue, newValue) -> {
+            pane.setPrefHeight(newValue.doubleValue());
+        });
+    }
+
+    public SimpleDoubleProperty prefHeightProperty() {
+        return prefHeight;
     }
 
     protected void validateOnShitEnter(KeyEvent event) {
@@ -75,24 +96,12 @@ public abstract class AbstractEditableView<P extends IPresenter<M, ? extends IVi
     }
 
     protected void hide(Pane pane) {
-
-        if (pane.getParent() instanceof VBox) {
-            VBox.setVgrow(pane, Priority.NEVER);
-        }
         pane.setPrefHeight(0);
-        pane.setMinHeight(Region.USE_PREF_SIZE);
-        pane.setMaxHeight(Region.USE_PREF_SIZE);
         pane.setVisible(false);
     }
 
     protected void show(Pane pane) {
-
-        if (pane.getParent() instanceof VBox) {
-            VBox.setVgrow(pane, Priority.ALWAYS);
-        }
-        pane.setPrefHeight(this.prefHeight);
-        pane.setMinHeight(Region.USE_PREF_SIZE);
-        pane.setMaxHeight(Region.USE_PREF_SIZE);
+        pane.setPrefHeight(this.prefHeight.get());
         pane.setVisible(true);
     }
 

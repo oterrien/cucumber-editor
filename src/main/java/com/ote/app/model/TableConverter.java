@@ -54,7 +54,7 @@ public final class TableConverter extends AbstractConverter<Table> implements IM
         @Override
         public String format(Table model, boolean isIndented) {
 
-            return Helper.pad(Helper.extract(model), " | ", (isIndented ? "\t| " : "| "), " |").
+            return Helper.pad(Helper.extract(model), " | ", (isIndented ? "\t\t| " : "\t| "), " |").
                     stream().collect(Collectors.joining("\r\n"));
         }
     }
@@ -68,7 +68,7 @@ public final class TableConverter extends AbstractConverter<Table> implements IM
 
             Collection<String> format = Helper.pad(Helper.extract(model), " | ", "| ", " |");
 
-            list.add(new Text("\t"));
+            list.add(new Text("\t\t"));
             Text text = new Text(format.stream().findFirst().get());
             text.getStyleClass().add("table_header");
             list.add(text);
@@ -77,7 +77,7 @@ public final class TableConverter extends AbstractConverter<Table> implements IM
 
             IntStream.range(1, rows.size()).forEach(i -> {
                 list.add(new Text("\r\n"));
-                list.add(new Text("\t"));
+                list.add(new Text("\t\t"));
                 Text line = new Text(rows.get(i));
                 line.getStyleClass().add("table_element");
                 list.add(line);

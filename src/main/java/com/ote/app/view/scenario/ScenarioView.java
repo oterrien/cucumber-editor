@@ -1,13 +1,17 @@
 package com.ote.app.view.scenario;
 
 import com.ote.app.Mode;
-import com.ote.app.model.Scenario;
 import com.ote.app.model.ScenarioConverter;
 import com.ote.app.model.ScenarioType;
 import com.ote.app.view.AbstractEditableView;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -25,17 +29,22 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
     private VBox editPane;
 
     @FXML
+    private Label label;
+
+    @FXML
     private TextField title;
 
     @FXML
     private TextArea steps;
 
-    private Type type;
+    private ObjectProperty<Type> type = new SimpleObjectProperty<>(null);
 
     @FXML
     public void initialize() {
 
         super.initialize(this.displayPane, this.editPane);
+
+        type.addListener((observable, oldValue, newValue) -> label.setText(newValue.getValue()));
 
         // SHIFT + ENTER -> validate description and title
         this.steps.setOnKeyPressed(this::validateOnShitEnter);
@@ -71,12 +80,12 @@ public class ScenarioView extends AbstractEditableView<ScenarioPresenter, Scenar
 
     @Override
     public Type getType() {
-        return this.type;
+        return this.type.get();
     }
 
     @Override
     public void setType(Type type) {
-        this.type = type;
+        this.type.set(type);
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package com.ote.app.model;
 
+import com.ote.app.view.scenario.IScenarioView;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 
@@ -57,7 +58,7 @@ public final class ScenarioConverter extends AbstractConverter<ScenarioType> imp
 
             Collection<Node> list = new ArrayList<>(10);
 
-            Text name = new Text("Scenario: ");
+            Text name = new Text(IScenarioView.Type.valueOf(model).getValue());
             name.getStyleClass().add("name");
             list.add(name);
 

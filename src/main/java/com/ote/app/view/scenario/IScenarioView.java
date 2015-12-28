@@ -11,7 +11,17 @@ import com.ote.app.view.IView;
 public interface IScenarioView extends IView<ScenarioType> {
 
     enum Type {
-        SCENARIO, SCENARIO_OUTLINE, BACKGROUND;
+        SCENARIO("Scenario: "), SCENARIO_OUTLINE("Scenario Outline: "), BACKGROUND("Background: ");
+
+        private String value;
+
+        Type(String value){
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
 
         public static Type valueOf(ScenarioType scenario) {
             if (scenario instanceof Scenario) {

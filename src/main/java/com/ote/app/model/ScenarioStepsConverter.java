@@ -1,5 +1,6 @@
 package com.ote.app.model;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 
@@ -117,9 +118,9 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
 
         private String format(Definition stepDef, boolean isIndented) {
 
-            StringBuilder sb = new StringBuilder();
+           StringBuilder sb = new StringBuilder();
             sb.append(isIndented ? "\t" : "").
-                    append(stepDef.getStep().getType().value().toLowerCase().replaceAll("\"", "'")).
+                    append( StringUtils.capitalize(stepDef.getStep().getType().value().toLowerCase().replaceAll("\"", "'"))).
                     append(" ").
                     append(stepDef.getStep().getContent().replaceAll("\"", "'")).append("\r\n");
 
@@ -163,10 +164,10 @@ public final class ScenarioStepsConverter extends AbstractConverter<Steps> imple
             List<Node> textList = new ArrayList<>(100);
 
             Step step = stepDef.getStep();
-            Text stepName = new Text(step.getType().value().toLowerCase());
+            Text stepName = new Text(StringUtils.capitalize(step.getType().value().toLowerCase()));
             stepName.getStyleClass().add("step");
             textList.add(stepName);
-            textList.add(new Text("\t"));
+            textList.add(new Text("\t\t"));
 
             String content = step.getContent();
 
