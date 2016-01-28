@@ -13,7 +13,6 @@ public class LaunchApp extends Application {
         launch(args);
     }
 
-
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -23,5 +22,4 @@ public class LaunchApp extends Application {
         stage.setHeight(240);
         stage.show();
     }
-
 }
