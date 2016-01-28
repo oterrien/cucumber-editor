@@ -3,6 +3,7 @@ approve_regex: ^Approved
 reject_regex: ^Rejected
 author_approval: ignored
 reset_on_push: true
+reset_on_reopened: true
 reviewers:
   members:
   - oterrien
