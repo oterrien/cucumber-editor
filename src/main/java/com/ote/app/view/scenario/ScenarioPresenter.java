@@ -20,7 +20,6 @@ public class ScenarioPresenter extends AbstractPresenter<ScenarioType, IScenario
         this.getView().setType(IScenarioView.Type.valueOf(model));
         this.getView().setTitle(model.getTitle());
         this.getView().setSteps(ScenarioStepsConverter.getInstance().getFormatter().format(model.getSteps()));
-		// System.out.println(model.toString());
     }
 
     @Override
