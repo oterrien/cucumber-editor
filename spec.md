@@ -14,4 +14,4 @@
 	- Associer chaque noeud à un render particulier pour la colorization syntaxique (utilisable par TextFlow)
 	
 ## github
-	- ajouter un workflow de validation 
+	- ajouter un workflow de validation
