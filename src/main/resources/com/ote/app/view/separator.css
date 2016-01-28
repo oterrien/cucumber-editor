@@ -1,0 +1,9 @@
+.separator{
+    -fx-background-color: slategrey;
+    /*-fx-background-radius: 1;*/
+}
+
+.separator .line{
+    -fx-border-color: slategrey;
+    /*-fx-background-radius: 1;*/
+}

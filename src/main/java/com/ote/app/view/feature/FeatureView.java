@@ -7,10 +7,13 @@ import com.ote.app.model.FeatureConverter;
 import com.ote.app.model.FeatureDescriptionConverter;
 import com.ote.app.view.AbstractEditableView;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -31,6 +34,9 @@ public class FeatureView extends AbstractEditableView<FeaturePresenter, Feature>
 
     @FXML
     private TextArea description;
+
+    @FXML
+    private Separator separator;
 
     @FXML
     public void initialize() {
@@ -92,6 +98,23 @@ public class FeatureView extends AbstractEditableView<FeaturePresenter, Feature>
     public void onDisplayPaneClicked(MouseEvent event) {
         if (event.getButton().equals(MouseButton.PRIMARY)) {
             this.setMode(Mode.EDIT);
+        }
+    }
+
+    @FXML
+    private void onMouseEvent(MouseEvent event) {
+
+        if (event.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
+            this.editPane.getScene().setCursor(Cursor.V_RESIZE);
+        } else if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
+            this.editPane.getScene().setCursor(Cursor.DEFAULT);
+        } else if (event.getEventType().equals(MouseEvent.MOUSE_DRAGGED)) {
+            this.editPane.getScene().setCursor(Cursor.V_RESIZE);
+            this.separator.getStylesheets().add("com/ote/app/view/separator.css");
+            Pane parent = (Pane) this.separator.getParent();
+            parent.setPrefHeight(parent.getHeight() + event.getY());
+        } else if (event.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
+            this.separator.getStylesheets().removeAll("com/ote/app/view/separator.css");
         }
     }
 
