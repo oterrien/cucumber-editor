@@ -52,7 +52,7 @@ public class ScenarioParserTest {
         Assertions.assertThat(((Definition) steps.getLineOrDefinition().get(4)).getStep().getContent().equals("the blog is called"));
     }
 
-    @Test
+    //@Test
     public void scenario_model_should_be_formatted() {
 
         ScenarioType scenario = new Scenario();
@@ -142,7 +142,7 @@ public class ScenarioParserTest {
             "| value11 | value12 |\r\n" +
             "| value21 | value22 |\r\n";
 
-    @Test
+    //@Test
     public void step_with_table_should_be_formatted() {
 
         Steps steps = new Steps();
